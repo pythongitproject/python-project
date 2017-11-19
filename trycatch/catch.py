@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #coding=utf-8
-#捕捉异常
+#捕捉异常vv
 try:
     print('try')
     r = 10 / 0
