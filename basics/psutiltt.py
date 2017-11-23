@@ -55,3 +55,6 @@ print(p.num_threads())# 进程的线程数量
 print(p.threads())# 所有线程信息
 print(p.environ()) # 进程环境变量
 print(p.terminate()) # 结束进程
+
+#psutil还提供了一个test()函数，可以模拟出ps命令的效果：
+print(psutil.test())
