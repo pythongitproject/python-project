@@ -25,7 +25,9 @@ msg['To'] = _format_addr('管理员 <%s>' % to_addr)
 msg['Subject'] = Header('来自smtp的问候。。。','utf-8').encode()
 
 server = smtplib.SMTP(smtp_server,25)
-server.connect(smtp_server)
+#加密smtp，创建安全连接
+server.starttls()
 server.login(from_addr,password)
 server.sendmail(from_addr,[to_addr],msg.as_string())
 server.quit()
+print('send seccess!')
