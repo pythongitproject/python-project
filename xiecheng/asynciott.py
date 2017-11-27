@@ -6,11 +6,16 @@
 # 然后把需要执行的协程扔到EventLoop中执行，就实现了异步IO
 import asyncio
 
-@asyncio.coroutine
-def hello():
+#async和await是针对coroutine的新语法，要使用新的语法，只需要做两步简单的替换
+#把@asyncio.coroutine替换为async；
+#把yield from替换为await。
+
+#@asyncio.coroutine
+async def hello():
     print('hello asyncio')
     #异步调用asyncio.sleep(1)
-    r = yield from asyncio.sleep(1)
+    #r = yield from asyncio.sleep(1)
+    r = await asyncio.sleep(1)
     print('hello again')
 
 #获取Eventloop

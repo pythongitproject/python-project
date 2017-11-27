@@ -2,6 +2,9 @@
 #coding=utf-8
 
 import asyncio
+#asyncio提供了完善的异步IO支持；
+#异步操作需要在coroutine中通过yield from完成；
+#多个coroutine可以封装成一组Task然后并发执行
 
 @asyncio.coroutine
 def wget(host):
