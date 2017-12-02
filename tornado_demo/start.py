@@ -4,7 +4,7 @@ import tornado_demo.uimethod as mt
 import tornado_demo.uimodule as md
 
 #static_url 静态文件自动更新缓存
-
+#模板引擎的本质就是分割字符串拼接
 
 
 INPUT_LIST = []
