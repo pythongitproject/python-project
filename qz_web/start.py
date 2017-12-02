@@ -2,10 +2,7 @@
 #coding==utf-8
 from wsgiref.simple_server import make_server
 
-urls = {
-    '/new':'path: /new',
-    '/sys':'path: /sys'
-}
+from web.urls import urls
 
 def run_server(environ, start_response):
     start_response('200 ok',[('Content-Type','text/html')])
