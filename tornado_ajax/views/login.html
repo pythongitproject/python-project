@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<body>
+    <input id="username" type="text" name="username"/>
+    <input id="password" type="password" name="password"/>
+    <input type="checkbox" name="auto" value="七天免登陆"/>
+    <input type="button" value="提交" onclick="login();"/>
+<script src='{{static_url("jquery-3.2.1.min.js")}}'></script>
+<script>
+//    var xhr = null;
+//    function login() {
+//        xhr = new XMLHttpRequest();
+//        //        xhr.open('get','/login');
+//        xhr.open("post","/login",true)
+//        xhr.onreadystatechange = func;
+//        //post请求需带请求头
+//        xhr.setRequestHeader("content-type","application/x-www-form-urlencoded;charset=UTF-8")
+//        xhr.send("username="+document.getElementById("username").value+";password="+document.getElementById("password").value);
+//    }
+//    function func(arg) {
+//
+//        if(xhr.readyState == 4){
+//            console.log(1)
+//            var data = xhr.responseText;
+//            var ret_dict = JSON.parse(data)
+//            if(ret_dict.status){
+//                alert('登陆成功');
+//            }else {
+//                alert(ret_dict.msg)
+//            }
+//
+//        }
+//    }
+    function login() {
+        $.post("/login",{"username":$("#username").val(),"password":$("#password").val()},function (callback) {
+           var data = callback;
+           var ret_dict = JSON.parse(data);
+           if(ret_dict.status){
+               alert('登陆成功');
+                }else {
+               alert(ret_dict.msg);
+           }
+        });
+    }
+
+</script>
+</body>
+</html>
