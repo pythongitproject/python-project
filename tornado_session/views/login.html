@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<body>
+<form action="/login" method="post">
+    <input type="text" name="username"/>
+    <input type="password" name="password"/>
+    <input type="checkbox" name="auto" value="七天免登陆"/>
+    <input type="submit" value="提交"/>
+    <span style="color: red">{{status_text}}</span>
+</form>
+<script src='{{static_url("jquery-3.2.1.min.js")}}'></script>
+<script src='{{static_url("jquery.cookie.js")}}'></script>
+<script>
+    //写cookie
+    function setcookie(name,value) {
+        var exp  =new Date().setSeconds(new Date().getSeconds()+8) ; //八秒后过期
+        document.cookie = name +"="+value+";expires="+exp;
+    }
+    //读取cookie
+    function getCookie(name) {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null; }
+
+
+</script>
+</body>
+</html>
