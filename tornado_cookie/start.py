@@ -47,10 +47,17 @@ settings = {
 }
 
 application = tornado.web.Application([
+    #(r'/index/(?p<page>\d*)',LoginHandler),   动态路由
     (r'/login',LoginHandler),
     (r'/manager',ManagerHandler),
     (r'/logout',LogoutHandler),
 ], **settings)
+
+#二级域名路由映射如buy.localhost.com
+application.add_handlers('buy.localhost.com$',[
+    (r"/index/(?P<page>\d*)", LoginHandler),      #二级域名访问函数
+])
+
 
 if __name__ == '__main__':
     application.listen(8888)
