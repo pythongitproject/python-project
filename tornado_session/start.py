@@ -6,6 +6,7 @@ import tornado.ioloop
 import time
 
 container = {}
+
 class Session:
     def __init__(self,handler):
         self.handler = handler
@@ -21,7 +22,7 @@ class Session:
         random_str = obj.hexdigest()
         return random_str
 
-    def set_value(self,key,value):
+    def __setitem__(self,key,value):
         #在container中加入随机字符串
         #定义专属于自己的数据
         #在客户端写入随机字符串
@@ -39,7 +40,7 @@ class Session:
         container[random_str][key] = value
         self.handler.set_cookie('u',random_str)
 
-    def get_value(self,key):
+    def __getitem__(self, key):
         random_str = self.handler.get_cookie('u')
         if not random_str:
             return None
@@ -51,26 +52,26 @@ class Session:
             return None
         return value
 
+class BaseHandler(tornado.web.RequestHandler):
+    def initialize(self):
+        self.session = Session(self)
 
-
-class ManagerHandler(tornado.web.RequestHandler):
+class ManagerHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        s = Session(self)
-        val = s.get_value('is_login')
+        val =self.session['is_login']
         if val:
             self.render('manager.html')
         else:
             self.redirect('/login')
 
-class LogoutHandler(tornado.web.RequestHandler):
+class LogoutHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        s = Session(self)
-        val = s.get_value('is_login')
+        val = self.session['is_login']
         if val:
-            s.set_value('is_login', False)
+            self.session['is_login'] = False
             self.redirect('/login')
 
-class LoginHandler(tornado.web.RequestHandler):
+class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render('login.html',status_text = '')
 
@@ -78,8 +79,7 @@ class LoginHandler(tornado.web.RequestHandler):
         username = self.get_argument('username',None)
         pwd = self.get_argument('password',None)
         if username == 'linweili' and pwd == '123':
-            s = Session(self)
-            s.set_value('is_login',True)
+            self.session['is_login'] = True
             self.redirect('/manager')
         else:
             self.render('login.html',status_text = '登录失败')
