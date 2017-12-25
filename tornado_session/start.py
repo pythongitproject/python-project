@@ -64,12 +64,23 @@ class ManagerHandler(BaseHandler):
         else:
             self.redirect('/login')
 
+class Check_codeHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        import io
+        from tornado_session import check_code
+        mstream = io.BytesIO()
+        img, code = check_code.create_validate_code()
+        img.save(mstream, "PNG")
+        self.write(mstream.getvalue())
+
+
 class LogoutHandler(BaseHandler):
     def get(self, *args, **kwargs):
         val = self.session['is_login']
         if val:
             self.session['is_login'] = False
             self.redirect('/login')
+
 
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -94,6 +105,7 @@ application = tornado.web.Application([
     (r'/login',LoginHandler),
     (r'/manager',ManagerHandler),
     (r'/logout',LogoutHandler),
+    (r'/check_code',Check_codeHandler),
 ], **settings)
 
 #二级域名路由映射如buy.localhost.com
