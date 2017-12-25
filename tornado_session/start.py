@@ -70,6 +70,7 @@ class Check_codeHandler(BaseHandler):
         from tornado_session import check_code
         mstream = io.BytesIO()
         img, code = check_code.create_validate_code()
+        self.session['check_code'] = code
         img.save(mstream, "PNG")
         self.write(mstream.getvalue())
 
@@ -89,11 +90,16 @@ class LoginHandler(BaseHandler):
     def post(self, *args, **kwargs):
         username = self.get_argument('username',None)
         pwd = self.get_argument('password',None)
-        if username == 'linweili' and pwd == '123':
-            self.session['is_login'] = True
-            self.redirect('/manager')
+        check_code = self.get_argument('code',None)
+        if check_code.upper() == self.session['check_code'].upper():
+            if username == 'linweili' and pwd == '123':
+                self.session['is_login'] = True
+                self.redirect('/manager')
+            else:
+                self.render('login.html', status_text='用户名或密码错误！')
         else:
-            self.render('login.html',status_text = '登录失败')
+            self.render('login.html', status_text='验证码错误，请重新输入！')
+
 
 settings = {
     'static_path': 'static',
