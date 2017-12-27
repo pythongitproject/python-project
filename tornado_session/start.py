@@ -56,6 +56,16 @@ class BaseHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.session = Session(self)
 
+
+class UploadHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        self.render('upload.html')
+    def post(self, *args, **kwargs):
+        print(self.get_argument('qq'))
+        file_name = self.request.files['files']
+
+        pass
+
 class ManagerHandler(BaseHandler):
     def get(self, *args, **kwargs):
         val =self.session['is_login']
@@ -109,6 +119,7 @@ settings = {
 application = tornado.web.Application([
     #(r'/index/(?p<page>\d*)',LoginHandler),   动态路由
     (r'/login',LoginHandler),
+    (r'/upload',UploadHandler),
     (r'/manager',ManagerHandler),
     (r'/logout',LogoutHandler),
     (r'/check_code',Check_codeHandler),
