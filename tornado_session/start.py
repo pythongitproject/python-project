@@ -62,9 +62,14 @@ class UploadHandler(BaseHandler):
         self.render('upload.html')
     def post(self, *args, **kwargs):
         print(self.get_argument('qq'))
-        file_name = self.request.files['files']
-
-        pass
+        files = self.request.files['files']
+        for file_name in files:
+            print('filename=%s' % file_name['filename'])
+            fname = file_name['filename']
+            import os
+            with open(os.path.join('static','img',fname),'wb') as up:
+                up.write(file_name['body'])
+                self.write(os.path.join('static','img',fname))
 
 class ManagerHandler(BaseHandler):
     def get(self, *args, **kwargs):
