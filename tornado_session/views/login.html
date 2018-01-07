@@ -11,7 +11,7 @@
     <p>
         <span>验证码：</span>
         <input type="text" name="code" id="code" placeholder="请输入验证码"/>
-        <img src="/check_code" id="getcode">
+        <img src="/check_code" id="getcode" onclick="Changecode();">
     </p>
     <input type="button" id="sb" value="提交"/></p>
     <span style="color: red" id="msg">{{status_text}}</span>
@@ -29,33 +29,35 @@
                var ret_dict = JSON.parse(data);
                console.log(ret_dict)
                if(ret_dict.status){
-                   alert('登陆成功');
+                   window.location.href = "/manager";
                }else {
-                   alert(1);
-                   if(ret_dict.msg == '验证码错误，请重新输入！'){
-                       alert(2);
-                       $("#code").attr("value","");
-                       alert(3);
-                       $("#msg").val(ret_dict.msg);
-                        alert(4);
-                   }else {
-                       alert(5);
-                       $("#uname").attr("value","");
-                       $("#pwd").attr("value","");
-                       $("#code").attr("value","");
-                       alert(6);
-                       $("#msg").val(ret_dict.msg);
-                       alert(7);
+                   var id = ret_dict.typeid;
+                   switch (id){
+                       case -1 :
+                           $("#uname").val("");
+                           $("#pwd").val("");
+                           $("#code").val("");
+                           Changecode();
+                           $("#msg").text(ret_dict.msg);
+                           break;
+                       case -2 :
+                           Changecode();
+                           $("#code").val("");
+                            $("#msg").text(ret_dict.msg);
+                           break;
+                       default:
+                           alert('网络君闹情绪了！')
+                           break;
                    }
-                   //alert(ret_dict.msg);
                }
         });
     });
 
     //刷新验证码
-    $("#getcode").on('click',function () {
-        $("#getcode").attr("src","/check_code?flag="+Math.random());
-    });
+    function Changecode() {
+            $("#getcode").attr("src","/check_code?flag="+Math.random());
+    }
+
 
 </script>
 </body>

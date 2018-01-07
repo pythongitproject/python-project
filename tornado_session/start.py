@@ -105,18 +105,22 @@ class LoginHandler(BaseHandler):
         pwd = self.get_argument('password',None)
         check_code = self.get_argument('code',None)
         print(username,pwd,check_code)
-        dic = {'status': True, 'msg': '','typeid':''}
+        print(self.session['check_code'])
+        dic = {'status': True, 'msg': '','typeid':0}
         if check_code.upper() == self.session['check_code'].upper():
             if username == 'linweili' and pwd == '123':
                 self.session['is_login'] = True
+                dic['typeid'] = 2
                 self.write(json.dumps(dic))
             else:
                 #self.render('login.html', status_text='用户名或密码错误！')
                 dic['status'] = False
+                dic['typeid'] = -1
                 dic['msg'] = '用户名或密码错误！'
                 self.write(json.dumps(dic))
         else:
             dic['status'] = False
+            dic['typeid'] = -2
             dic['msg'] = '验证码错误，请重新输入！'
             self.write(json.dumps(dic))
             #self.render('login.html', status_text='验证码错误，请重新输入！')
