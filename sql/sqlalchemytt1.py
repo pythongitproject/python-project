@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.schema import ForeignKey
 
 #一对多
-engine = create_engine("mysql+pymysql://root:123456a@127.0.0.1:3306/alchemy",echo = True)
+engine = create_engine("mysql+pymysql://root:123456a@127.0.0.1:3306/alchemy?charset=utf8",echo = True)
 Base = declarative_base()
 
 class Parent(Base):
