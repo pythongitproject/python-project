@@ -3,7 +3,9 @@
 
 #生产者
 import pika
-
+#远程连接rabbitmq server
+# credentials = pika.PlainCredentials("alex","123")
+# connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.14.47',credentials=credentials))
 connection = pika.BlockingConnection(pika.ConnectionParameters(
     host='localhost'
 ))
