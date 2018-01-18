@@ -22,6 +22,9 @@ def callback(ch, method, properties, body):
     print("Received %r" % body)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
+#表示谁来谁取，不再按照奇偶数排列
+# channel.basic_qos(prefetch_count=1)
+
 channel.basic_consume(callback,
                       queue='hello',
                       no_ack=False
