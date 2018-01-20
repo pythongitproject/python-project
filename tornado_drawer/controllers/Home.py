@@ -27,6 +27,13 @@ class IndexHandler(BaseHandler):
         uname = self.get_secure_cookie('uname')
         self.render('index.html',flag=status,username=uname,item_list=None)
 
+class RegisterHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        self.render('register.html')
+
+    def post(self, *args, **kwargs):
+        pass
+
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render('login.html',status_text = '')
