@@ -1,7 +1,7 @@
 #/usr/bin/env python3
 #coding=utf-8
 from tornado_drawer.utils import db
-from sqlalchemy import Column,String,Integer,Date
+from sqlalchemy import Column,String,Integer,DateTime
 
 Base = db.getBase()
 
@@ -11,16 +11,7 @@ class userinfo(Base):
     name = Column(String(20),nullable=False)
     telno = Column(String(20),nullable=False)
     pwd = Column(String(20),nullable=False)
-    adddate = Column(Date,nullable=False)
-
-
-
-
-
-
-
-
-
+    adddate = Column(DateTime,nullable=False)
 
 
 
