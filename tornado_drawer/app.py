@@ -3,19 +3,22 @@
 import tornado.web
 import tornado.ioloop
 from tornado_drawer.controllers import Home
-
+import time, base64
 
 settings = {
     'static_path':'statics',
-    'template_path':'views'
+    'template_path':'views',
+    'cookie_secret':'MTg4MTQyODg3ODQrMjAxOC0wMS0yMCAwMTowMDowMA',
 }
 application = tornado.web.Application([
-    (r'/', Home.LoginHandler),
-
-    ],**settings
-)
+    (r'/', Home.BaseHandler),
+    (r'/index', Home.IndexHandler),
+    (r'/login',Home.LoginHandler),
+    (r'/logout',Home.LogoutHandler),
+    (r'/check_code',Home.Check_codeHandler),
+    ], **settings)
 
 if __name__ == '__main__':
-    application.listen(6666)
+    application.listen(5555)
     tornado.ioloop.IOLoop.instance().start()
 

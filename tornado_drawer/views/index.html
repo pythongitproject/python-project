@@ -2,31 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>首页</title>
     <link rel="stylesheet" href='{{static_url("plugins/bootstrap3/css/bootstrap.css")}}'/>
 </head>
 <body>
 <nav class="navbar navbar-default" role="navigation">
 	<div class="container-fluid">
 	<div class="navbar-header">
-		<a class="navbar-brand" href="#">菜鸟教程</a>
+		<a class="navbar-brand" href="#">排行榜</a>
 	</div>
 	<div>
 		<ul class="nav navbar-nav">
-			<li class="active"><a href="#">iOS</a></li>
-			<li><a href="#">SVN</a></li>
-				{% if user_info['is_login'] %}
+			<li class="active"><a href="#">最热</a></li>
+			<li><a href="#">个人</a></li>
+				{% if flag %}
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							{{  user_info['username'] }}
+							{{  username }}
 							<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="#">退出登录</a></li>
+							<li><a href="/logout">退出登录</a></li>
 						</ul>
 					</li>
 				{% else %}
-				<li><a onclick="Login()">登录</a></li><li><a href="#">注册</a></li>
+				<li><a  href="/login">登录</a></li><li><a href="#">注册</a></li>
 				{% end %}
 
 		</ul>
@@ -44,8 +44,8 @@
 		{% end %}
 	{% else %}
 		<ul class="list-group" style="background-color: #eeeeee">
-			<h5>默认标题.</h5>
-			<li class="list-group-item">默认内容</li>
+			<h5>标题</h5>
+			<li class="list-group-item">暂无相关内容</li>
 		</ul>
 	{% end %}
 
@@ -53,7 +53,7 @@
 </div>
 
 <!--登录模态框-->
-<div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+<!--<div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 	 <form action="/login" method="post">
@@ -80,7 +80,8 @@
 	 </form>
     </div>
   </div>
-</div>
+</div>-->
+<!--发帖模态框-->
 <div class="modal fade" id="pub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -113,9 +114,9 @@
 <script src='{{static_url("js/jquery-3.2.1.min.js")}}'></script>
 <script src='{{static_url("plugins/bootstrap3/js/bootstrap.js")}}'></script>
 <script type="application/javascript">
-	function Login() {
+	/*function Login() {
 		$('#login_modal').modal('show');
-    };
+    };*/
 	function Publish() {
 		$('#pub').modal('show');
     }
