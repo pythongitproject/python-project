@@ -19,15 +19,19 @@ class Check_codeHandler(BaseHandler):
         #获取验证码
         from tornado_drawer.utils import check_code
         img, code = check_code.create_validate_code()
-        self.set_cookie('code',code)
+        self.set_secure_cookie('code',code)
         img.save(mstream, "PNG")
         self.write(mstream.getvalue())
 
 class IndexHandler(BaseHandler):
     def get(self, *args, **kwargs):
         status = self.get_secure_cookie('is_login')
-        uname = self.get_secure_cookie('uname')
-        self.render('index.html',flag=status,username=uname,item_list=None)
+        telno = self.get_secure_cookie('telno',None)
+        if telno:
+            uinfo = self.db.query(userinfo).filter_by(telno=bytes.decode(telno)).first()
+            self.render('index.html', flag=status, username=uinfo.name, item_list=None)
+        else:
+            self.render('index.html',flag=status,username=None,item_list=None)
 
 class RegisterHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -38,13 +42,6 @@ class RegisterHandler(BaseHandler):
         username = self.get_argument('username')
         password = self.get_argument('password')
         telno = self.get_argument('telno')
-        try:
-            uinfo = self.db.query(userinfo).filter_by(name=username).first()
-        except:
-            dic['status'] = False
-            dic['msg'] = '网络闹情绪了，请重试！'
-            dic['typeid'] = -3
-            self.write(json.dumps(dic))
         try:
             uinfo = self.db.query(userinfo).filter_by(telno=telno).first()
         except:
@@ -78,23 +75,23 @@ class LoginHandler(BaseHandler):
         self.render('login.html',status_text ='')
 
     def post(self, *args, **kwargs):
-        username = self.get_argument('username',None)
+        telno = self.get_argument('telno',None)
         pwd = self.get_argument('password',None)
         check_code = self.get_argument('code',None)
         dic = {'status': True, 'msg': '','typeid':0}
-        if check_code.upper() == self.get_cookie('code').upper():
+        if check_code.upper() == bytes.decode(self.get_secure_cookie('code')).upper():
             try:
-                uinfo = self.db.query(userinfo).filter_by(name=username).first()
+                uinfo = self.db.query(userinfo).filter_by(telno=telno).first()
             except:
                 dic['status'] = False
                 dic['typeid'] = -3
-                dic['msg'] = '该用户不存在！'
+                dic['msg'] = '该用户不存在,请注册后登录！'
                 self.write(json.dumps(dic))
             if uinfo:
                 if pwd == uinfo.pwd :
                     self.clear_cookie('code')
                     self.set_secure_cookie('is_login', 'True')
-                    self.set_secure_cookie('uname', 'linweili')
+                    self.set_secure_cookie('telno', telno)
                     dic['typeid'] = 2
                     self.write(json.dumps(dic))
                 else:
@@ -105,7 +102,7 @@ class LoginHandler(BaseHandler):
             else:
                 dic['status'] = False
                 dic['typeid'] = -3
-                dic['msg'] = '该用户不存在！'
+                dic['msg'] = '该用户不存在,请注册后登录！'
                 self.write(json.dumps(dic))
         else:
             dic['status'] = False
@@ -120,9 +117,9 @@ class DropoutHandler(BaseHandler):
 
 class LogoutHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        uname = self.get_secure_cookie('uname')
+        telno = self.get_secure_cookie('telno')
         try:
-            uinfo = self.db.query(userinfo).filter_by(name = bytes.decode(uname)).delete()
+            self.db.query(userinfo).filter_by(telno = bytes.decode(telno)).delete()
             self.db.commit()
             self.clear_all_cookies()
             self.redirect('/index')

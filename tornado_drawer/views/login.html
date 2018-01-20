@@ -6,7 +6,7 @@
 </head>
 <body>
 <form>
-    <p><span>用户名：</span><input type="text" name="username" id="uname" placeholder="请输入用户名"/></p>
+    <p><span>手机号码：</span><input type="text" name="telno" id="telno" placeholder="请输入手机号码" maxlength="11"/></p>
     <p><span>密码：</span><input type="password" name="password" id="pwd" placeholder="请输入密码"/></p>
     <p>
         <span>验证码：</span>
@@ -23,7 +23,7 @@
 
     $("#sb").on("click",function () {
         $.post("/login",
-            {"username":$("#uname").val(),"password":$("#pwd").val(),"code":$("#code").val()},
+            {"telno":$("#telno").val(),"password":$("#pwd").val(),"code":$("#code").val()},
             function (callback) {
                var data = callback;
                var ret_dict = JSON.parse(data);
@@ -34,7 +34,7 @@
                    var id = ret_dict.typeid;
                    switch (id){
                        case -1 :
-                           $("#uname").val("");
+                           $("#telno").val("");
                            $("#pwd").val("");
                            $("#code").val("");
                            Changecode();
@@ -47,7 +47,7 @@
                            break;
                        case -3 :
                            Changecode();
-                           $("#uname").val("");
+                           $("#telno").val("");
                            $("#pwd").val("");
                            $("#code").val("");
                             $("#msg").text(ret_dict.msg);
