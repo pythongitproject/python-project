@@ -45,6 +45,11 @@
                            $("#code").val("");
                             $("#msg").text(ret_dict.msg);
                            break;
+                       case -3 :
+                           Changecode();
+                           $("#code").val("");
+                            $("#msg").text(ret_dict.msg);
+                           break;
                        default:
                            alert('网络君闹情绪了！')
                            break;
