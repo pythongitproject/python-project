@@ -26,18 +26,22 @@ class Check_codeHandler(BaseHandler):
 class IndexHandler(BaseHandler):
     def get(self, *args, **kwargs):
         status = self.get_secure_cookie('is_login')
-        telno = self.get_secure_cookie('telno',None)
-
-        item_list = self.db.query(posts).all()
+        telno = self.get_secure_cookie('telno')
+        try:
+            item_list = self.db.query(Posts).order_by(Posts.click_cout.desc(),Posts.like_count.desc()).all()[0:3]
+            self.db.close()
+        except:
+            item_list = ''
         if telno:
-           try:
-               uinfo = self.db.query(userinfo).filter_by(telno=bytes.decode(telno)).first()
-           except:
-               self.redirect('/login')
-           if item_list:
-               self.render('index.html', flag=status, username=uinfo.name, item_list=None)
+            uinfo = self.db.query(UserInfo).filter_by(telno=bytes.decode(telno)).first()
+            self.db.close()
+            if status:
+                try:
+                    self.render('index.html', flag=bytes.decode(status), username=uinfo.name, item_list=item_list)
+                except:
+                    self.render('index.html', flag=None, username=None, item_list=item_list)
         else:
-            self.render('index.html',flag=status,username=None,item_list=None)
+            self.render('index.html',flag=None,username=None,item_list=item_list)
 
 class RegisterHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -49,7 +53,7 @@ class RegisterHandler(BaseHandler):
         password = self.get_argument('password')
         telno = self.get_argument('telno')
         try:
-            uinfo = self.db.query(userinfo).filter_by(telno=telno).first()
+            uinfo = self.db.query(UserInfo).filter_by(telno=telno).first()
         except:
             dic['status'] = False
             dic['msg'] = '网络闹情绪了，请重试！'
@@ -63,7 +67,7 @@ class RegisterHandler(BaseHandler):
         else:
             try:
                 adddate = datetime.datetime.now()
-                self.db.add(userinfo(name=username, telno=telno, pwd=password, adddate=adddate))
+                self.db.add(UserInfo(name=username, telno=telno, pwd=password, adddate=adddate))
                 self.db.commit()
                 self.db.close()
                 dic['msg'] = '注册成功，点击跳往登录页'
@@ -85,17 +89,18 @@ class LoginHandler(BaseHandler):
         dic = {'status': True, 'msg': '','typeid':0}
         if check_code.upper() == bytes.decode(self.get_secure_cookie('code')).upper():
             try:
-                uinfo = self.db.query(userinfo).filter_by(telno=telno).first()
+                userinfo = self.db.query(UserInfo).filter_by(telno=telno).first()
             except:
                 dic['status'] = False
                 dic['typeid'] = -3
                 dic['msg'] = '该用户不存在,请注册后登录！'
                 self.write(json.dumps(dic))
-            if uinfo:
-                if pwd == uinfo.pwd :
+            if userinfo:
+                if pwd == userinfo.pwd :
                     self.clear_cookie('code')
                     self.set_secure_cookie('is_login', 'True')
                     self.set_secure_cookie('telno', telno)
+                    self.set_secure_cookie('name', userinfo.name)
                     dic['typeid'] = 2
                     self.write(json.dumps(dic))
                 else:
@@ -123,7 +128,7 @@ class LogoutHandler(BaseHandler):
     def get(self, *args, **kwargs):
         telno = self.get_secure_cookie('telno')
         try:
-            self.db.query(userinfo).filter_by(telno = bytes.decode(telno)).delete()
+            self.db.query(UserInfo).filter_by(telno = bytes.decode(telno)).delete()
             self.db.commit()
             self.db.close()
             self.clear_all_cookies()
@@ -141,8 +146,8 @@ class ReleaseHandler(BaseHandler):
         content = self.get_argument('content')
         adddate = datetime.datetime.now()
         telno = bytes.decode(self.get_secure_cookie('telno'))
-        u1 = self.db.query(userinfo).filter_by(telno=telno).first()
-        p1 = posts(title=title, content=content, adddate=adddate)
+        u1 = self.db.query(UserInfo).filter_by(telno=telno).first()
+        p1 = Posts(title=title, content=content, adddate=adddate)
         u1.pts.append(p1)
         self.db.add(p1)
         try:

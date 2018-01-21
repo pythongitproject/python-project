@@ -41,20 +41,21 @@
 	{% if item_list %}
 		{% for new in item_list %}
 			<ul class="list-group" style="background-color: #eeeeee">
-				<h5>{{ new['title']}}</h5>
-				<li class="list-group-item">{{ new['content']}}<span>{{ new['adddate']}}</span></li>
+
+				<p style="font-size: large;color: black">标题：{{ new.title}}</p>
+				<p>用户：{{ new.user_id}}</p>
+				<li class="list-group-item">内容：{{ new.content}}</li>
+				<li><span>点击数：{{ new.click_cout}}</span>&nbsp; &nbsp; <span>关注度：{{ new.like_count}}</span></li>
+				<span>发布时间：{{ new.adddate}}</span>
 			</ul>
 		{% end %}
 	{% else %}
 		<ul class="list-group" style="background-color: #eeeeee">
-			<h5>标题</h5>
+			<h5>默认标题</h5>
 			<li class="list-group-item">暂无相关内容</li>
 		</ul>
 	{% end %}
-
-
 </div>
-
 <!--发帖模态框-->
 <div class="modal fade" id="pub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
   <div class="modal-dialog" role="document">
@@ -65,7 +66,6 @@
 			<h4 class="modal-title">发布帖子</h4>
 		  </div>
 		  <div class="modal-body">
-
 			  <div class="form-group">
 				<label  class="control-label">标题:</label>
 				<input type="text" class="form-control" name="title" id="title">
@@ -74,7 +74,6 @@
 				<label  class="control-label">内容:</label>
 				<textarea class="form-control" name="content" id="content"></textarea>
 			  </div>
-
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -84,7 +83,6 @@
     </div>
   </div>
 </div>
-
 
 <script src='{{static_url("js/jquery-3.2.1.min.js")}}'></script>
 <script src='{{static_url("plugins/bootstrap3/js/bootstrap.js")}}'></script>

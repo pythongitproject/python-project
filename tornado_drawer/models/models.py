@@ -6,25 +6,25 @@ from sqlalchemy.orm import relationship
 
 Base = db.getBase()
 
-class userinfo(Base):
+class UserInfo(Base):
     __tablename__ = 'userinfo'
     id = Column(Integer,primary_key=True,autoincrement=True)
     name = Column(String(20),nullable=False)
     telno = Column(String(20),nullable=False)
     pwd = Column(String(20),nullable=False)
     adddate = Column(DateTime,nullable=False)
-    pts = relationship('posts')
+    pts = relationship('Posts')
 
-class posts(Base):
+class Posts(Base):
     __tablename__ = 'posts'
     id = Column(Integer,primary_key=True,autoincrement=True)
-    user_id = Column(Integer,ForeignKey('userinfo.id'))
+    user_id = Column(Integer,ForeignKey('userinfo.id'),nullable=False)
     title = Column(String(50),nullable=False)
     content = Column(String(100),nullable=False)
     click_cout = Column(Integer,nullable=False,default=0)
     like_count = Column(Integer,nullable=False,default=0)
     adddate = Column(DateTime,nullable=False)
-    uinfo = relationship('userinfo')
+    uinfo = relationship('UserInfo')
 
 #Base.metadata.drop_all(db.getEngine())
 #Base.metadata.create_all(db.getEngine())
