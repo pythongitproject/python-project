@@ -35,13 +35,14 @@
 	</div>
 	</div>
 </nav>
-<input type="button" value="发布" onclick="Publish();">
+<input type="button" value="发布" id="release">
+<!--帖子-->
 <div style="width: 30%">
 	{% if item_list %}
 		{% for new in item_list %}
 			<ul class="list-group" style="background-color: #eeeeee">
 				<h5>{{ new['title']}}</h5>
-				<li class="list-group-item">{{ new['content']}}</li>
+				<li class="list-group-item">{{ new['content']}}<span>{{ new['adddate']}}</span></li>
 			</ul>
 		{% end %}
 	{% else %}
@@ -54,40 +55,11 @@
 
 </div>
 
-<!--登录模态框-->
-<!--<div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-	 <form action="/login" method="post">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="exampleModalLabel">用户登录</h4>
-		  </div>
-		  <div class="modal-body">
-
-			  <div class="form-group">
-				<label  class="control-label">用户名:</label>
-				<input type="text" class="form-control" name="username">
-			  </div>
-			  <div class="form-group">
-				<label  class="control-label">密码:</label>
-				<input type="password" class="form-control" name="pwd">
-			  </div>
-
-		  </div>
-		  <div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			<button type="submit" class="btn btn-primary">提交</button>
-		  </div>
-	 </form>
-    </div>
-  </div>
-</div>-->
 <!--发帖模态框-->
 <div class="modal fade" id="pub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-	 <form action="/pub" method="post">
+	 <form >
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h4 class="modal-title">发布帖子</h4>
@@ -96,32 +68,28 @@
 
 			  <div class="form-group">
 				<label  class="control-label">标题:</label>
-				<input type="text" class="form-control" name="title">
+				<input type="text" class="form-control" name="title" id="title">
 			  </div>
 			  <div class="form-group">
 				<label  class="control-label">内容:</label>
-				<textarea class="form-control" name="content"></textarea>
+				<textarea class="form-control" name="content" id="content"></textarea>
 			  </div>
 
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			<button type="submit" class="btn btn-primary">提交</button>
+			<button type="button" class="btn btn-primary" id="sb">点击发帖</button>
 		  </div>
 	 </form>
     </div>
   </div>
 </div>
 
+
 <script src='{{static_url("js/jquery-3.2.1.min.js")}}'></script>
 <script src='{{static_url("plugins/bootstrap3/js/bootstrap.js")}}'></script>
-<script type="application/javascript">
-	/*function Login() {
-		$('#login_modal').modal('show');
-    };*/
-	function Publish() {
-		$('#pub').modal('show');
-    }
-</script>
+<script src='{{static_url("js/jquery.cookie.js")}}'></script>
+<script src='{{static_url("plugins/layer/layer.js")}}'></script>
+<script src='{{static_url("js/index.js")}}'></script>
 </body>
 </html>

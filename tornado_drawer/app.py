@@ -14,6 +14,7 @@ application = tornado.web.Application([
     (r'/index', Home.IndexHandler),
     (r'/login',Home.LoginHandler),
     (r'/signup',Home.RegisterHandler),
+    (r'/release',Home.ReleaseHandler),
     (r'/logout',Home.LogoutHandler),
     (r'/dropout',Home.DropoutHandler),
     (r'/check_code',Home.Check_codeHandler),

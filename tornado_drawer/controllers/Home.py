@@ -27,9 +27,15 @@ class IndexHandler(BaseHandler):
     def get(self, *args, **kwargs):
         status = self.get_secure_cookie('is_login')
         telno = self.get_secure_cookie('telno',None)
+
+        item_list = self.db.query(posts).all()
         if telno:
-            uinfo = self.db.query(userinfo).filter_by(telno=bytes.decode(telno)).first()
-            self.render('index.html', flag=status, username=uinfo.name, item_list=None)
+           try:
+               uinfo = self.db.query(userinfo).filter_by(telno=bytes.decode(telno)).first()
+           except:
+               self.redirect('/login')
+           if item_list:
+               self.render('index.html', flag=status, username=uinfo.name, item_list=None)
         else:
             self.render('index.html',flag=status,username=None,item_list=None)
 
@@ -59,6 +65,7 @@ class RegisterHandler(BaseHandler):
                 adddate = datetime.datetime.now()
                 self.db.add(userinfo(name=username, telno=telno, pwd=password, adddate=adddate))
                 self.db.commit()
+                self.db.close()
                 dic['msg'] = '注册成功，点击跳往登录页'
                 self.write(json.dumps(dic))
             except:
@@ -66,9 +73,6 @@ class RegisterHandler(BaseHandler):
                 dic['msg'] = '注册失败，请重新注册！'
                 dic['typeid'] = -1
                 self.write(json.dumps(dic))
-
-
-
 
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -121,8 +125,35 @@ class LogoutHandler(BaseHandler):
         try:
             self.db.query(userinfo).filter_by(telno = bytes.decode(telno)).delete()
             self.db.commit()
+            self.db.close()
             self.clear_all_cookies()
             self.redirect('/index')
         except:
             self.redirect('/index')
+
+class ReleaseHandler(BaseHandler):
+    def post(self, *args, **kwargs):
+        dd = {
+            'status':True,
+            'typeid':1
+        }
+        title = self.get_argument('title')
+        content = self.get_argument('content')
+        adddate = datetime.datetime.now()
+        telno = bytes.decode(self.get_secure_cookie('telno'))
+        u1 = self.db.query(userinfo).filter_by(telno=telno).first()
+        p1 = posts(title=title, content=content, adddate=adddate)
+        u1.pts.append(p1)
+        self.db.add(p1)
+        try:
+            self.db.commit()
+            self.db.close()
+            self.write(json.dumps(dd))
+        except:
+            dd['typeid'] = -1
+            dd['status'] = False
+            self.write(json.dumps(dd))
+
+
+
 
