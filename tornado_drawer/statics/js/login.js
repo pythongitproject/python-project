@@ -1,4 +1,16 @@
 
+    function isPoneAvailable(str) {
+          var myreg=/^[1][3,4,5,,6,7,8,9][0-9]{9}$/;
+          if (!myreg.test(str)) {
+              return true;
+          } else {
+              return false;
+          }
+      }
+    //刷新验证码
+    function Changecode() {
+            $("#getcode").attr("src","/check_code?flag="+Math.random());
+    }
     $("#sb").on("click",function () {
         var flag = true;
             if($("#telno").val().trim()==''){
@@ -64,7 +76,4 @@
 
     });
 
-    //刷新验证码
-    function Changecode() {
-            $("#getcode").attr("src","/check_code?flag="+Math.random());
-    }
+
