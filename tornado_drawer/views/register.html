@@ -2,50 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href='{{static_url("favicon.ico")}}'>
     <title>注册页</title>
 </head>
 <body>
 <form>
-    <p><span>用户名：</span><input type="text"  id="uname" placeholder="请输入用户名" required="required"/></p>
-    <p><span>手机号码：</span><input type="text"  id="telno" placeholder="请输入11位的手机号码" required="required" maxlength="11"/></p>
-    <p><span>密码：</span><input type="password"  id="pwd" placeholder="请输入密码" required="required"/></p>
+    <p><span>用户名：</span><input type="text"  id="uname" placeholder="请输入用户名" /></p>
+    <p><span>手机号码：</span><input type="text"  id="telno" placeholder="请输入11位的手机号码"  maxlength="11"/></p>
+    <p><span>密码：</span><input type="password"  id="pwd" placeholder="请输入登录密码" /></p>
     <p><input type="button" id="sb" value="点击注册"/><a href="/login">登录</a></p>
     <span style="color: red" id="msg">{{status_text}}</span>
 </form>
 <script src='{{static_url("js/jquery-3.2.1.min.js")}}'></script>
-<script>
-    $("#sb").on("click",function () {
-        $.post("/signup",
-            {"username":$("#uname").val(),"password":$("#pwd").val(),"telno":$("#telno").val()},
-            function (callback) {
-               var data = callback;
-               var ret_dict = JSON.parse(data);
-               console.log(ret_dict)
-               if(ret_dict.status){
-                   alert(ret_dict.msg);
-                   window.location.href = "/login";
-               }else {
-                   var id = ret_dict.typeid;
-                   switch (id){
-                       case -1 :
-                           $("#uname").val("");
-                           $("#pwd").val();
-                           $("#telno").val();
-                           $("#msg").text(ret_dict.msg);
-                           break;
-                       case -2 :
-                           $("#uname").val("");
-                           $("#pwd").val("");
-                           $("#telno").val("");
-                           $("#msg").text(ret_dict.msg);
-                           break;
-                       default:
-                           $("#msg").text(ret_dict.msg);
-                           break;
-                   }
-               }
-        });
-    });
-</script>
+<script src='{{static_url("js/register.js")}}'></script>
 </body>
 </html>

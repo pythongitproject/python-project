@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href='{{static_url("favicon.ico")}}'>
     <title>登录页</title>
 </head>
 <body>
@@ -10,7 +11,7 @@
     <p><span>密码：</span><input type="password" name="password" id="pwd" placeholder="请输入密码"/></p>
     <p>
         <span>验证码：</span>
-        <input type="text" name="code" id="code" placeholder="请输入验证码"/>
+        <input type="text" name="code" id="code" placeholder="请输入验证码" maxlength="4"/>
         <img src="/check_code" id="getcode" onclick="Changecode();">
     </p>
     <p><input type="button" id="sb" value="登录"/><a href="/signup">注册</a></p>
@@ -19,53 +20,6 @@
 <script src='{{static_url("js/jquery-3.2.1.min.js")}}'></script>
 <script src='{{static_url("js/jquery.cookie.js")}}'></script>
 <script src='{{static_url("js/jquery-form.js")}}'></script>
-<script>
-
-    $("#sb").on("click",function () {
-        $.post("/login",
-            {"telno":$("#telno").val(),"password":$("#pwd").val(),"code":$("#code").val()},
-            function (callback) {
-               var data = callback;
-               var ret_dict = JSON.parse(data);
-               console.log(ret_dict)
-               if(ret_dict.status){
-                   window.location.href = "/index";
-               }else {
-                   var id = ret_dict.typeid;
-                   switch (id){
-                       case -1 :
-                           $("#telno").val("");
-                           $("#pwd").val("");
-                           $("#code").val("");
-                           Changecode();
-                           $("#msg").text(ret_dict.msg);
-                           break;
-                       case -2 :
-                           Changecode();
-                           $("#code").val("");
-                            $("#msg").text(ret_dict.msg);
-                           break;
-                       case -3 :
-                           Changecode();
-                           $("#telno").val("");
-                           $("#pwd").val("");
-                           $("#code").val("");
-                            $("#msg").text(ret_dict.msg);
-                           break;
-                       default:
-                           alert('网络君闹情绪了！')
-                           break;
-                   }
-               }
-        });
-    });
-
-    //刷新验证码
-    function Changecode() {
-            $("#getcode").attr("src","/check_code?flag="+Math.random());
-    }
-
-
-</script>
+<script src='{{static_url("js/login.js")}}'></script>
 </body>
 </html>

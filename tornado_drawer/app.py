@@ -3,7 +3,6 @@
 import tornado.web
 import tornado.ioloop
 from tornado_drawer.controllers import Home
-import time, base64
 
 settings = {
     'static_path':'statics',
