@@ -87,6 +87,7 @@ class ClickHandler(BaseHandler):
         if userid:
             userid = bytes.decode(userid)
             newsid = self.get_argument('newsid')
+            click_count = self.get_argument('click_count')
             import time
             adddate = time.strftime("%Y-%m-%d", time.localtime())
             count = self.db.query(ClickPosts).filter(ClickPosts.postsid ==newsid,ClickPosts.user_id ==userid,ClickPosts.adddate >= adddate ).count()
@@ -95,7 +96,17 @@ class ClickHandler(BaseHandler):
                 dict['typeid'] = -3
                 self.write(json.dumps(dict))
             else:
-                self.write(json.dumps(dict))
+                try:
+                    self.db.add(ClickPosts(postsid=newsid, user_id=userid, adddate=datetime.datetime.now()))
+                    ucount = self.db.query(Posts).filter_by(id=newsid).update(click_count=click_count+1)
+                    self.db.commit()
+                    self.db.close()
+                    self.write(json.dumps(dict))
+                except:
+                    dict['status'] = False
+                    dict['typeid'] = -4
+                    self.db.close()
+                    self.write(json.dumps(dict))
         else:
             dict['status'] = False
             dict['typeid'] = -1
