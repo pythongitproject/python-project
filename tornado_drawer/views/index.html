@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+	<link rel="shortcut icon" href='{{static_url("favicon.ico")}}'>
+    <link rel="stylesheet" href='{{static_url("plugins/bootstrap3/css/bootstrap.css")}}'/>
+	<link rel="stylesheet" href='{{static_url("plugins/Font-Awesome-3.2.1/css/font-awesome.min.css")}}'/>
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="#">排行榜</a>
+	</div>
+	<div>
+		<ul class="nav navbar-nav">
+			<li class="active"><a href="#">最热</a></li>
+			<li><a href="#">个人</a></li>
+				{% if flag %}
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							{{  username }}
+							<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="/dropout">退出登录</a></li>
+							<li><a href="/logout">注销账号</a></li>
+						</ul>
+					</li>
+				{% else %}
+				    <li><a  href="/login">登录</a></li><li><a href="/signup">注册</a></li>
+				{% end %}
+
+		</ul>
+	</div>
+	</div>
+</nav>
+<input type="button" value="发布" id="release">
+<!--帖子-->
+<div style="width: 60%">
+	{% if item_list %}
+		{% for new in item_list %}
+			<ul class="list-group" style="background-color: #eeeeee">
+				<p style="font-size: large;color: black">Title：{{ new.title}}</p>
+				<p>From ：{{ new.name}}</p>
+                <li class="list-group-item">{{ new.content}}</li>
+				<span>Time ：{{ new.adddate}} &nbsp;&nbsp;<i class="icon-thumbs-up" style="color: #8a8a8a;" id="dianzan" addd='{{ new.id}}'></i>{{ new.click_cout}} &nbsp;&nbsp; <i class="icon-comment-alt" id="pinglun"></i>{{ new.like_count}}</span>
+			</ul>
+		{% end %}
+	{% else %}
+		<ul class="list-group" style="background-color: #eeeeee">
+			<h5>默认标题</h5>
+			<li class="list-group-item">暂无相关内容</li>
+		</ul>
+	{% end %}
+</div>
+<!--发帖模态框-->
+<div class="modal fade" id="pub" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+	 <form >
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title">发布帖子</h4>
+		  </div>
+		  <div class="modal-body">
+			  <div class="form-group">
+				<label  class="control-label">标题:</label>
+				<input type="text" class="form-control" name="title" id="title" maxlength="50">
+			  </div>
+			  <div class="form-group">
+				<label  class="control-label">内容:</label>
+				<textarea class="form-control" name="content" id="content" maxlength="300"></textarea>
+			  </div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary" id="sb">点击发帖</button>
+		  </div>
+	 </form>
+    </div>
+  </div>
+</div>
+
+
+
+<script src='{{static_url("js/jquery-3.2.1.min.js")}}'></script>
+<script src='{{static_url("plugins/bootstrap3/js/bootstrap.js")}}'></script>
+<script src='{{static_url("js/jquery.cookie.js")}}'></script>
+<script src='{{static_url("plugins/layer/layer.js")}}'></script>
+<script src='{{static_url("js/index.js")}}'></script>
+<script>
+
+    $(".icon-thumbs-up").click(function () {
+    var getname = $.cookie('telno')
+    if(getname!=null){
+         //dosomething
+        $.ajax({
+            type : 'post',
+            url : '/click',
+            data : {'newsid' : $(this).attr("addd")},
+            success: function (returndata) {
+                dd = JSON.parse(returndata);
+                if(dd.status){
+                    alert('okok');
+                }else {
+                    switch (dd.typeid){
+                        case -1:
+                            alert('bu ok!');
+                            break;
+                        case -2:
+                            alert('henyou wenti!');
+                            break;
+                        case -3:
+                            alert('dianzan guole');
+                            break;
+                        default:
+                            alert('whathappen');
+                            break;
+                    }
+                }
+            }
+        });
+
+    }else {
+        layer.msg('登录才能点赞哦', {
+          time: 0 //不自动关闭
+          ,btn: ['登录', '算了']
+          ,yes: function(index){
+            layer.close(index);
+            window.location.href = "/login";
+          }
+        });
+    }
+});
+
+    $("#pinglun").click(function () {
+        alert('pinglun');
+    });
+</script>
+</body>
+</html>

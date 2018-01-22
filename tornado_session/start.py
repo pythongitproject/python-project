@@ -4,6 +4,7 @@
 import tornado.web
 import tornado.ioloop
 import time
+import json
 
 container = {}
 
@@ -56,7 +57,6 @@ class BaseHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.session = Session(self)
 
-
 class UploadHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render('upload.html')
@@ -89,14 +89,12 @@ class Check_codeHandler(BaseHandler):
         img.save(mstream, "PNG")
         self.write(mstream.getvalue())
 
-
 class LogoutHandler(BaseHandler):
     def get(self, *args, **kwargs):
         val = self.session['is_login']
         if val:
             self.session['is_login'] = False
             self.redirect('/login')
-
 
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -106,15 +104,26 @@ class LoginHandler(BaseHandler):
         username = self.get_argument('username',None)
         pwd = self.get_argument('password',None)
         check_code = self.get_argument('code',None)
+        print(username,pwd,check_code)
+        print(self.session['check_code'])
+        dic = {'status': True, 'msg': '','typeid':0}
         if check_code.upper() == self.session['check_code'].upper():
             if username == 'linweili' and pwd == '123':
                 self.session['is_login'] = True
-                self.redirect('/manager')
+                dic['typeid'] = 2
+                self.write(json.dumps(dic))
             else:
-                self.render('login.html', status_text='用户名或密码错误！')
+                #self.render('login.html', status_text='用户名或密码错误！')
+                dic['status'] = False
+                dic['typeid'] = -1
+                dic['msg'] = '用户名或密码错误！'
+                self.write(json.dumps(dic))
         else:
-            self.render('login.html', status_text='验证码错误，请重新输入！')
-
+            dic['status'] = False
+            dic['typeid'] = -2
+            dic['msg'] = '验证码错误，请重新输入！'
+            self.write(json.dumps(dic))
+            #self.render('login.html', status_text='验证码错误，请重新输入！')
 
 settings = {
     'static_path': 'static',
@@ -123,6 +132,7 @@ settings = {
 
 application = tornado.web.Application([
     #(r'/index/(?p<page>\d*)',LoginHandler),   动态路由
+    (r'/',LoginHandler),
     (r'/login',LoginHandler),
     (r'/upload',UploadHandler),
     (r'/manager',ManagerHandler),

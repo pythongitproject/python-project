@@ -52,7 +52,7 @@ class PublishHandler(tornado.web.RequestHandler):
         self.redirect('/index')
 
 settings = {
-    'template_path':'template',    #模板路径配置
+    'template_path':'views',    #模板路径配置
     'static_path':'static',    #静态文件路径配置
     'static_url_prefix':'/sss/',    #静态文件前缀
     'ui_methods': mt,

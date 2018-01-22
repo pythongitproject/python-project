@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href='{{static_url("favicon.ico")}}'>
+    <title>登录页</title>
+</head>
+<body>
+<form>
+    <p><span>手机号码：</span><input type="text" name="telno" id="telno" placeholder="请输入手机号码" maxlength="11"/></p>
+    <p><span>密码：</span><input type="password" name="password" id="pwd" placeholder="请输入密码"/></p>
+    <p>
+        <span>验证码：</span>
+        <input type="text" name="code" id="code" placeholder="请输入验证码" maxlength="4"/>
+        <img src="/check_code" id="getcode" onclick="Changecode();">
+    </p>
+    <p><input type="button" id="sb" value="登录"/><a href="/signup">注册</a></p>
+    <span style="color: red" id="msg">{{status_text}}</span>
+</form>
+<script src='{{static_url("js/jquery-3.2.1.min.js")}}'></script>
+<script src='{{static_url("js/jquery.cookie.js")}}'></script>
+<script src='{{static_url("js/jquery-form.js")}}'></script>
+<script src='{{static_url("js/login.js")}}'></script>
+</body>
+</html>
