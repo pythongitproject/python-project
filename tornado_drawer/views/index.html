@@ -42,11 +42,10 @@
 	{% if item_list %}
 		{% for new in item_list %}
 			<ul class="list-group" style="background-color: #eeeeee">
-                <p  id="newsid" addd='{{ new.id}}'></p>
 				<p style="font-size: large;color: black">Title：{{ new.title}}</p>
 				<p>From ：{{ new.name}}</p>
                 <li class="list-group-item">{{ new.content}}</li>
-				<span>Time ：{{ new.adddate}} &nbsp;&nbsp;<i class="icon-thumbs-up" style="color: #8a8a8a;" id="dianzan"></i>{{ new.click_cout}} &nbsp;&nbsp; <i class="icon-comment-alt" id="pinglun"></i>{{ new.like_count}}</span>
+				<span>Time ：{{ new.adddate}} &nbsp;&nbsp;<i class="icon-thumbs-up" style="color: #8a8a8a;" id="dianzan" addd='{{ new.id}}'></i>{{ new.click_cout}} &nbsp;&nbsp; <i class="icon-comment-alt" id="pinglun"></i>{{ new.like_count}}</span>
 			</ul>
 		{% end %}
 	{% else %}
@@ -93,22 +92,20 @@
 <script src='{{static_url("js/index.js")}}'></script>
 <script>
 
-    $("#dianzan").click(function () {
-        alert( $("#newsid").attr("addd"));
+    $(".icon-thumbs-up").click(function () {
     var getname = $.cookie('telno')
     if(getname!=null){
          //dosomething
         $.ajax({
             type : 'post',
             url : '/click',
-            data : {'newsid' : $("#newsid").attr("addd")},
+            data : {'newsid' : $(this).attr("addd")},
             success: function (returndata) {
                 dd = JSON.parse(returndata);
                 if(dd.status){
+                    alert('okok');
+                }else {
                     switch (dd.typeid){
-                        case 1:
-                            alert('okok!');
-                            break;
                         case -1:
                             alert('bu ok!');
                             break;
