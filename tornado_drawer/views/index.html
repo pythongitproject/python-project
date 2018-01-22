@@ -5,6 +5,7 @@
     <title>首页</title>
 	<link rel="shortcut icon" href='{{static_url("favicon.ico")}}'>
     <link rel="stylesheet" href='{{static_url("plugins/bootstrap3/css/bootstrap.css")}}'/>
+	<link rel="stylesheet" href='{{static_url("plugins/Font-Awesome-3.2.1/css/font-awesome.min.css")}}'/>
 </head>
 <body>
 <nav class="navbar navbar-default" role="navigation">
@@ -37,16 +38,15 @@
 </nav>
 <input type="button" value="发布" id="release">
 <!--帖子-->
-<div style="width: 30%">
+<div style="width: 60%">
 	{% if item_list %}
 		{% for new in item_list %}
 			<ul class="list-group" style="background-color: #eeeeee">
-
-				<p style="font-size: large;color: black">标题：{{ new.title}}</p>
-				<p>用户：{{ new.user_id}}</p>
-				<li class="list-group-item">内容：{{ new.content}}</li>
-				<li><span>点击数：{{ new.click_cout}}</span>&nbsp; &nbsp; <span>关注度：{{ new.like_count}}</span></li>
-				<span>发布时间：{{ new.adddate}}</span>
+                <p  id="newsid" addd='{{ new.id}}'></p>
+				<p style="font-size: large;color: black">Title：{{ new.title}}</p>
+				<p>From ：{{ new.name}}</p>
+                <li class="list-group-item">{{ new.content}}</li>
+				<span>Time ：{{ new.adddate}} &nbsp;&nbsp;<i class="icon-thumbs-up" style="color: #8a8a8a;" id="dianzan"></i>{{ new.click_cout}} &nbsp;&nbsp; <i class="icon-comment-alt" id="pinglun"></i>{{ new.like_count}}</span>
 			</ul>
 		{% end %}
 	{% else %}
@@ -68,11 +68,11 @@
 		  <div class="modal-body">
 			  <div class="form-group">
 				<label  class="control-label">标题:</label>
-				<input type="text" class="form-control" name="title" id="title">
+				<input type="text" class="form-control" name="title" id="title" maxlength="50">
 			  </div>
 			  <div class="form-group">
 				<label  class="control-label">内容:</label>
-				<textarea class="form-control" name="content" id="content"></textarea>
+				<textarea class="form-control" name="content" id="content" maxlength="300"></textarea>
 			  </div>
 		  </div>
 		  <div class="modal-footer">
@@ -84,10 +84,63 @@
   </div>
 </div>
 
+
+
 <script src='{{static_url("js/jquery-3.2.1.min.js")}}'></script>
 <script src='{{static_url("plugins/bootstrap3/js/bootstrap.js")}}'></script>
 <script src='{{static_url("js/jquery.cookie.js")}}'></script>
 <script src='{{static_url("plugins/layer/layer.js")}}'></script>
 <script src='{{static_url("js/index.js")}}'></script>
+<script>
+
+    $("#dianzan").click(function () {
+        alert( $("#newsid").attr("addd"));
+    var getname = $.cookie('telno')
+    if(getname!=null){
+         //dosomething
+        $.ajax({
+            type : 'post',
+            url : '/click',
+            data : {'newsid' : $("#newsid").attr("addd")},
+            success: function (returndata) {
+                dd = JSON.parse(returndata);
+                if(dd.status){
+                    switch (dd.typeid){
+                        case 1:
+                            alert('okok!');
+                            break;
+                        case -1:
+                            alert('bu ok!');
+                            break;
+                        case -2:
+                            alert('henyou wenti!');
+                            break;
+                        case -3:
+                            alert('dianzan guole');
+                            break;
+                        default:
+                            alert('whathappen');
+                            break;
+                    }
+                }
+            }
+        });
+
+    }else {
+        layer.msg('登录才能点赞哦', {
+          time: 0 //不自动关闭
+          ,btn: ['登录', '算了']
+          ,yes: function(index){
+            layer.close(index);
+            window.location.href = "/login";
+          }
+        });
+    }
+});
+
+    $("#pinglun").click(function () {
+        alert('pinglun');
+    });
+</script>
 </body>
 </html>

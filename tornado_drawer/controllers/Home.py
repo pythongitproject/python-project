@@ -1,6 +1,7 @@
 #/usr/bin/env python3
 #coding=utf-8
 import tornado.web
+from sqlalchemy.sql import and_,or_
 import json, datetime
 from tornado_drawer.utils import db
 from tornado_drawer.models.models import *
@@ -27,8 +28,9 @@ class IndexHandler(BaseHandler):
     def get(self, *args, **kwargs):
         status = self.get_secure_cookie('is_login')
         telno = self.get_secure_cookie('telno')
+        uname = self.get_secure_cookie('username')
         try:
-            item_list = self.db.query(Posts).order_by(Posts.click_cout.desc(),Posts.like_count.desc()).all()[0:3]
+            item_list = self.db.query(Posts.id,Posts.title,UserInfo.name,Posts.content,Posts.adddate,Posts.click_cout,Posts.like_count).join(UserInfo).order_by(Posts.adddate.desc(),Posts.click_cout.desc(),Posts.like_count.desc()).all()[0:3]
             self.db.close()
         except:
             item_list = ''
@@ -37,7 +39,7 @@ class IndexHandler(BaseHandler):
             self.db.close()
             if status:
                 try:
-                    self.render('index.html', flag=bytes.decode(status), username=uinfo.name, item_list=item_list)
+                    self.render('index.html', flag=bytes.decode(status), username=bytes.decode(uname), item_list=item_list)
                 except:
                     self.render('index.html', flag=None, username=None, item_list=item_list)
         else:
@@ -78,6 +80,27 @@ class RegisterHandler(BaseHandler):
                 dic['typeid'] = -1
                 self.write(json.dumps(dic))
 
+class ClickHandler(BaseHandler):
+    def post(self, *args, **kwargs):
+        dict = {'status': True,'typeid':1 }
+        userid = self.get_secure_cookie('userid')
+        if userid:
+            userid = bytes.decode(userid)
+            newsid = self.get_argument('newsid')
+            import time
+            adddate = time.strftime("%Y-%m-%d", time.localtime())
+            count = self.db.query(ClickPosts).filter(ClickPosts.postsid ==newsid,ClickPosts.user_id ==userid,ClickPosts.adddate >= adddate ).count()
+            if count>0 :
+                dict['status'] = False
+                dict['typeid'] = -3
+                self.write(json.dumps(dict))
+            else:
+                self.write(json.dumps(dict))
+        else:
+            dict['status'] = False
+            dict['typeid'] = -1
+            self.write(json.dumps(dict))
+
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render('login.html',status_text ='')
@@ -100,7 +123,8 @@ class LoginHandler(BaseHandler):
                     self.clear_cookie('code')
                     self.set_secure_cookie('is_login', 'True')
                     self.set_secure_cookie('telno', telno)
-                    self.set_secure_cookie('name', userinfo.name)
+                    self.set_secure_cookie('username', userinfo.name)
+                    self.set_secure_cookie('userid', str(userinfo.id))
                     dic['typeid'] = 2
                     self.write(json.dumps(dic))
                 else:
