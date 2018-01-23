@@ -54,11 +54,18 @@
                                             $("#msg").text(ret_dict.msg);
                                            break;
                                        case -3 :
+                                           layer.msg('该用户不存在哦', {
+                                              time: 0 //不自动关闭
+                                              ,btn: ['点击注册', '再试下']
+                                              ,yes: function(index){
+                                                layer.close(index);
+                                                window.location.href = "/signup";
+                                              }
+                                            });
                                            Changecode();
                                            $("#telno").val("");
                                            $("#pwd").val("");
                                            $("#code").val("");
-                                            $("#msg").text(ret_dict.msg);
                                            break;
                                        default:
                                            alert('网络君闹情绪了,请重试！')

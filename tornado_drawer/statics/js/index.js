@@ -1,4 +1,57 @@
 
+    $(".icon-thumbs-up").click(function () {
+    var getname = $.cookie('telno');
+    if(getname!=null){
+        $.ajax({
+            type : 'post',
+            url : '/click',
+            data : {
+                'newsid' : $(this).attr("addd"),
+                'click_count': $(this).attr("count")
+            },
+            success: function (returndata) {
+                dd = JSON.parse(returndata);
+                if(dd.status){
+                    var counts =$(this).val();
+                    $(this).val(counts);
+                }else {
+                    switch (dd.typeid){
+						case -1:
+						     layer.msg('登录才能点赞哦', {
+								  time: 0 //不自动关闭
+								  ,btn: ['登录', '算了']
+								  ,yes: function(index){
+									layer.close(index);
+									window.location.href = "/login";
+								  }
+								});
+						     break;
+                        case -3:
+                             alert(dd.msg);
+                            break;
+                        case -4:
+                             alert(dd.msg);
+                            break;
+                        default:
+                            alert('what happen???');
+                            break;
+                    }
+                }
+            }
+        });
+
+    }else {
+        layer.msg('登录才能点赞哦', {
+          time: 0 //不自动关闭
+          ,btn: ['登录', '算了']
+          ,yes: function(index){
+            layer.close(index);
+            window.location.href = "/login";
+          }
+        });
+    }
+});
+
 $("#release").click(function () {
     var getname = $.cookie('telno')
     if(getname!=null){

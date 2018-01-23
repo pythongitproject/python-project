@@ -45,7 +45,7 @@
 				<p style="font-size: large;color: black">Title：{{ new.title}}</p>
 				<p>From ：{{ new.name}}</p>
                 <li class="list-group-item">{{ new.content}}</li>
-				<span>Time ：{{ new.adddate}} &nbsp;&nbsp;<i class="icon-thumbs-up" style="color: #8a8a8a;" id="dianzan" addd='{{ new.id}}'>{{ new.click_cout}}</i> &nbsp;&nbsp; <i class="icon-comment-alt" id="pinglun"></i>{{ new.like_count}}</span>
+				<span>Time ：{{ new.adddate}} &nbsp;&nbsp;<i class="icon-thumbs-up" style="color: #8a8a8a;" id="dianzan" addd='{{ new.id}}' count='{{ new.click_count}}'>{{ new.click_count}}</i> &nbsp;&nbsp; <i class="icon-comment-alt" id="pinglun"></i>{{ new.like_count}}</span>
 			</ul>
 		{% end %}
 	{% else %}
@@ -91,55 +91,6 @@
 <script src='{{static_url("plugins/layer/layer.js")}}'></script>
 <script src='{{static_url("js/index.js")}}'></script>
 <script>
-
-    $(".icon-thumbs-up").click(function () {
-    var getname = $.cookie('telno');
-    if(getname!=null){
-        $.ajax({
-            type : 'post',
-            url : '/click',
-            data : {
-                'newsid' : $(this).attr("addd"),
-                'click_count': $(this).val()
-            },
-            success: function (returndata) {
-                dd = JSON.parse(returndata);
-                if(dd.status){
-                    alert('okok');
-                    $(this).val = $(this).val()+1;
-                }else {
-                    switch (dd.typeid){
-                        case -1:
-                            alert('bu ok!');
-                            break;
-                        case -2:
-                            alert('henyou wenti!');
-                            break;
-                        case -3:
-                            alert('dianzan guole');
-                            break;
-                        case -4:
-                            alert('add error');
-                            break;
-                        default:
-                            alert('whathappen');
-                            break;
-                    }
-                }
-            }
-        });
-
-    }else {
-        layer.msg('登录才能点赞哦', {
-          time: 0 //不自动关闭
-          ,btn: ['登录', '算了']
-          ,yes: function(index){
-            layer.close(index);
-            window.location.href = "/login";
-          }
-        });
-    }
-});
 
     $("#pinglun").click(function () {
         alert('pinglun');

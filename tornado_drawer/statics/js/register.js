@@ -54,9 +54,15 @@
                                        $("#msg").text(ret_dict.msg);
                                        break;
                                    case -2 :
+                                       layer.msg('该用户已注册哦', {
+                                              time: 0 //不自动关闭
+                                              ,btn: ['点击前往登录', '再想想']
+                                              ,yes: function(index){
+                                                layer.close(index);
+                                                window.location.href = "/login";
+                                              }
+                                            });
                                        $("#pwd").val("");
-                                       $("#telno").val("");
-                                       $("#msg").text(ret_dict.msg);
                                        break;
                                    default:
                                        $("#uname").val("");

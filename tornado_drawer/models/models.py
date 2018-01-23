@@ -21,7 +21,7 @@ class Posts(Base):
     user_id = Column(Integer,ForeignKey('userinfo.id'),nullable=False)
     title = Column(String(50),nullable=False)
     content = Column(String(300),nullable=False)
-    click_cout = Column(Integer,nullable=False,default=0)
+    click_count = Column(Integer,nullable=False,default=0)
     like_count = Column(Integer,nullable=False,default=0)
     adddate = Column(DateTime,nullable=False)
     uinfo = relationship('UserInfo')

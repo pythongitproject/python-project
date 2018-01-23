@@ -30,7 +30,7 @@ class IndexHandler(BaseHandler):
         telno = self.get_secure_cookie('telno')
         uname = self.get_secure_cookie('username')
         try:
-            item_list = self.db.query(Posts.id,Posts.title,UserInfo.name,Posts.content,Posts.adddate,Posts.click_cout,Posts.like_count).join(UserInfo).order_by(Posts.adddate.desc(),Posts.click_cout.desc(),Posts.like_count.desc()).all()[0:3]
+            item_list = self.db.query(Posts.id,Posts.title,UserInfo.name,Posts.content,Posts.adddate,Posts.click_count,Posts.like_count).join(UserInfo).order_by(Posts.adddate.desc(),Posts.click_count.desc(),Posts.like_count.desc()).all()[0:3]
             self.db.close()
         except:
             item_list = ''
@@ -38,10 +38,9 @@ class IndexHandler(BaseHandler):
             uinfo = self.db.query(UserInfo).filter_by(telno=bytes.decode(telno)).first()
             self.db.close()
             if status:
-                try:
-                    self.render('index.html', flag=bytes.decode(status), username=bytes.decode(uname), item_list=item_list)
-                except:
-                    self.render('index.html', flag=None, username=None, item_list=item_list)
+                self.render('index.html', flag=bytes.decode(status), username=bytes.decode(uname), item_list=item_list)
+            else:
+                self.render('index.html', flag=None, username=None, item_list=item_list)
         else:
             self.render('index.html',flag=None,username=None,item_list=item_list)
 
@@ -76,40 +75,47 @@ class RegisterHandler(BaseHandler):
                 self.write(json.dumps(dic))
             except:
                 dic['status'] = False
-                dic['msg'] = '注册失败，请重新注册！'
+                dic['msg'] = '注册失败，请重试！'
                 dic['typeid'] = -1
                 self.write(json.dumps(dic))
 
 class ClickHandler(BaseHandler):
     def post(self, *args, **kwargs):
-        dict = {'status': True,'typeid':1 }
+        dict = {'status': True,'typeid':1 ,'msg':'完美的一击~'}
         userid = self.get_secure_cookie('userid')
         if userid:
             userid = bytes.decode(userid)
             newsid = self.get_argument('newsid')
-            click_count = self.get_argument('click_count')
+            click_count = int(self.get_argument('click_count'))
             import time
             adddate = time.strftime("%Y-%m-%d", time.localtime())
             count = self.db.query(ClickPosts).filter(ClickPosts.postsid ==newsid,ClickPosts.user_id ==userid,ClickPosts.adddate >= adddate ).count()
             if count>0 :
                 dict['status'] = False
                 dict['typeid'] = -3
+                dict['msg'] = '今天已点赞，明天赶脚哦~'
                 self.write(json.dumps(dict))
             else:
                 try:
-                    self.db.add(ClickPosts(postsid=newsid, user_id=userid, adddate=datetime.datetime.now()))
-                    ucount = self.db.query(Posts).filter_by(id=newsid).update(click_count=click_count+1)
+                    cpost = ClickPosts(postsid=newsid, user_id=userid, adddate=datetime.datetime.now())
+                    self.db.add(cpost)
+                    click_count += 1
+                    print(click_count)
+                    self.db.query(Posts).filter(Posts.id==newsid).update({Posts.click_count:click_count})
+                    print(2)
                     self.db.commit()
                     self.db.close()
                     self.write(json.dumps(dict))
                 except:
                     dict['status'] = False
                     dict['typeid'] = -4
+                    dict['msg'] = '姿势不对，点赞失败了~'
                     self.db.close()
                     self.write(json.dumps(dict))
         else:
             dict['status'] = False
             dict['typeid'] = -1
+            dict['msg'] = '登录才可以点赞哦~'
             self.write(json.dumps(dict))
 
 class LoginHandler(BaseHandler):
