@@ -64,7 +64,6 @@ class Single_indexHandler(BaseHandler):
         else:
             self.redirect('/login')
 
-
 class RegisterHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render('register.html',status_text='')
@@ -126,7 +125,6 @@ class ClickHandler(BaseHandler):
                     print(2)
                     self.db.commit()
                     self.db.close()
-                    dict['click_count'] = click_count
                     self.write(json.dumps(dict))
                 except:
                     dict['status'] = False

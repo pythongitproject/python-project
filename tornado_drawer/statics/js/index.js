@@ -2,6 +2,7 @@
 $(".icon-thumbs-up").click(function () {
     var getname = $.cookie('telno');
     var counts =$(this).attr("count");
+    var aa = $(this);
     var isClick = false;
     if(getname!=null){
         $.ajax({
@@ -16,8 +17,8 @@ $(".icon-thumbs-up").click(function () {
                 if(dd.status){
                         isClick = true;
                         if(isClick){
-                            $(this).attr('count',parseInt(counts) + 1);
-                        $(this).html(parseInt(counts) + 1);
+                            aa.attr('count',parseInt(counts) + 1);
+                            aa.html(parseInt(counts) + 1);
                         }
                 }else {
                     isClick = false;
