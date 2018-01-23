@@ -12,6 +12,7 @@ settings = {
 application = tornado.web.Application([
     (r'/', Home.BaseHandler),
     (r'/index', Home.IndexHandler),
+    (r'/single_index',Home.Single_indexHandler),
     (r'/login',Home.LoginHandler),
     (r'/signup',Home.RegisterHandler),
     (r'/release',Home.ReleaseHandler),

@@ -1,20 +1,26 @@
 
 $(".icon-thumbs-up").click(function () {
     var getname = $.cookie('telno');
+    var counts =$(this).attr("count");
+    var isClick = false;
     if(getname!=null){
         $.ajax({
             type : 'post',
             url : '/click',
             data : {
                 'newsid' : $(this).attr("addd"),
-                'click_count': $(this).attr("count")
+                'click_count': counts
             },
             success: function (returndata) {
                 dd = JSON.parse(returndata);
                 if(dd.status){
-                    var counts =$(this).val();
-                    $(this).val(counts);
+                        isClick = true;
+                        if(isClick){
+                            $(this).attr('count',parseInt(counts) + 1);
+                        $(this).html(parseInt(counts) + 1);
+                        }
                 }else {
+                    isClick = false;
                     switch (dd.typeid){
 						case -1:
 						     layer.msg('登录才能点赞哦', {
@@ -39,7 +45,6 @@ $(".icon-thumbs-up").click(function () {
                 }
             }
         });
-
     }else {
         layer.msg('登录才能点赞哦', {
           time: 0 //不自动关闭
@@ -50,50 +55,13 @@ $(".icon-thumbs-up").click(function () {
           }
         });
     }
+
 });
 
-$("#single").click(function () {
+$("#single_index").click(function () {
         var getname = $.cookie('telno');
         if(getname!=null){
-            $("#hot").removeClass('active');
-            $(this).addClass('active');
-            $.ajax({
-                type : 'get',
-                url : '/index',
-                data : {
-                    'posts_type' : 'single'
-                },
-                success: function (returndata) {
-                    dd = JSON.parse(returndata);
-                    if(dd.status){
-                        var counts =$(this).val();
-                        $(this).val(counts);
-                    }else {
-                        switch (dd.typeid){
-                            case -1:
-                                 layer.msg('登录查看个人Post', {
-                                      time: 0 //不自动关闭
-                                      ,btn: ['登录', '偏不']
-                                      ,yes: function(index){
-                                        layer.close(index);
-                                        window.location.href = "/login";
-                                      }
-                                    });
-                                 break;
-                            case -3:
-                                 alert(dd.msg);
-                                break;
-                            case -4:
-                                 alert(dd.msg);
-                                break;
-                            default:
-                                alert('what happen???');
-                                break;
-                        }
-                    }
-                }
-            });
-
+            window.location.href = '/single_index';
         }else {
             layer.msg('登录查看个人Post', {
               time: 0 //不自动关闭

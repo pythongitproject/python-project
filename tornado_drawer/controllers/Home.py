@@ -28,16 +28,11 @@ class IndexHandler(BaseHandler):
     def get(self, *args, **kwargs):
         status = self.get_secure_cookie('is_login')
         telno = self.get_secure_cookie('telno')
-        userid = self.get_secure_cookie('userid')
         uname = self.get_secure_cookie('username')
         poststype = self.get_argument('posts_type',None)
         try:
-            if poststype:
-                item_list = self.db.query(Posts.id, Posts.title, UserInfo.name, Posts.content, Posts.adddate,Posts.click_count, Posts.like_count).join(UserInfo).filter(Posts.user_id==userid).order_by(Posts.adddate.desc(), Posts.click_count.desc(), Posts.like_count.desc()).all()[0:3]
-                self.db.close()
-            else:
-                item_list = self.db.query(Posts.id,Posts.title,UserInfo.name,Posts.content,Posts.adddate,Posts.click_count,Posts.like_count).join(UserInfo).order_by(Posts.adddate.desc(),Posts.click_count.desc(),Posts.like_count.desc()).all()[0:3]
-                self.db.close()
+            item_list = self.db.query(Posts.id,Posts.title,UserInfo.name,Posts.content,Posts.adddate,Posts.click_count,Posts.like_count).join(UserInfo).order_by(Posts.adddate.desc(),Posts.click_count.desc(),Posts.like_count.desc()).all()[0:3]
+            self.db.close()
         except:
             item_list = ''
         if telno:
@@ -49,6 +44,26 @@ class IndexHandler(BaseHandler):
                 self.render('index.html', flag=None, username=None, item_list=item_list)
         else:
             self.render('index.html',flag=None,username=None,item_list=item_list)
+
+class Single_indexHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        status = self.get_secure_cookie('is_login')
+        uname = self.get_secure_cookie('username')
+        userid = self.get_secure_cookie('userid')
+        if status and uname and userid:
+            item_list = self.db.query(Posts.id, Posts.title, UserInfo.name, Posts.content, Posts.adddate,
+                                      Posts.click_count, Posts.like_count).join(UserInfo).filter(
+                Posts.user_id == bytes.decode(userid)).order_by(Posts.adddate.desc(), Posts.click_count.desc(),
+                                                  Posts.like_count.desc()).all()[0:3]
+            self.db.close()
+            if item_list:
+                self.render('singleindex.html', flag=bytes.decode(status), username=bytes.decode(uname),
+                            item_list=item_list)
+            else:
+                self.render('index.html', flag=bytes.decode(status), username=bytes.decode(uname), item_list='')
+        else:
+            self.redirect('/login')
+
 
 class RegisterHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -111,6 +126,7 @@ class ClickHandler(BaseHandler):
                     print(2)
                     self.db.commit()
                     self.db.close()
+                    dict['click_count'] = click_count
                     self.write(json.dumps(dict))
                 except:
                     dict['status'] = False
