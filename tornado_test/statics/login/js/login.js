@@ -11,6 +11,7 @@
     function Changecode() {
             $("#getcode").attr("src","/check_code?flag="+Math.random());
     }
+
     $("#sb").on("click",function () {
         var flag = true;
             if($("#telno").val().trim()==''){
@@ -42,7 +43,8 @@
                             $("#cerror").text('');
                              if(flag){
                             $.post("/login",
-                            {"telno":$("#telno").val().trim(),"password":$("#pwd").val().trim(),"code":$("#code").val().trim()},
+                            {"telno":$("#telno").val().trim(),"password":$("#pwd").val().trim(),
+                                "code":$("#code").val().trim(),"_xsrf":$.cookie('_xsrf')},
                             function (callback) {
                                var data = callback;
                                var ret_dict = JSON.parse(data);
@@ -84,4 +86,9 @@
             }
     });
 
+    $(document).keyup(function(event){
+      if(event.keyCode ==13){
+        $("#sb").trigger("click");
+      }
+    });
 

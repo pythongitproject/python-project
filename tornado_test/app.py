@@ -8,12 +8,13 @@ settings = {
     'static_path':'statics',
     'template_path':'views',
     'cookie_secret':'MTg4MTQyODg3ODQrMjAxOC0wMS0yMCAwMTowMDowMA',
+    'login_url': '/login',
+    'xsrf_cookies':True
 }
 application = tornado.web.Application([
-    (r'/', Home.BaseHandler),
+    (r'/', Home.LoginHandler),
     (r'/index', Home.IndexHandler),
     (r'/login',Home.LoginHandler),
-    (r'/logout',Home.LogoutHandler),
     (r'/dropout',Home.DropoutHandler),
     (r'/check_code',Home.Check_codeHandler),
     ], **settings)

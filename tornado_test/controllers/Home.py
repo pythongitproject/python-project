@@ -8,11 +8,10 @@ from tornado_test.models.models import *
 
 #基类
 class BaseHandler(tornado.web.RequestHandler):
-    def get(self, *args, **kwargs):
-        #默认访问登录页
-        self.render('login.html',status_text = '')
     def initialize(self):
         self.db = db.getSession()
+    def get_current_user(self):
+        return self.get_secure_cookie('uid')
 
 class Check_codeHandler(BaseHandler):
     def get(self, *args, **kwargs):
@@ -26,19 +25,14 @@ class Check_codeHandler(BaseHandler):
         self.write(mstream.getvalue())
 
 class IndexHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self, *args, **kwargs):
-        status = self.get_secure_cookie('is_login')
-        uid = self.get_secure_cookie('uid')
-        uname = self.get_secure_cookie('uname')
-        if status and uid :
-            self.render('index.html',username= uname)
-        else:
-            self.redirect('/login')
+        um = self.get_secure_cookie('um')
+        self.render('index.html',username=bytes.decode(um))
 
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render('login.html')
-
     def post(self, *args, **kwargs):
         telno = self.get_argument('telno',None)
         pwd = self.get_argument('password',None)
@@ -57,9 +51,8 @@ class LoginHandler(BaseHandler):
                     import time
                     #expires_day=None, 或者expires_day=3, 即3天, 都不会影响expires的, 因为expires比expires_days 的优先级高些. 所以这里设置为15分钟可以简化为
                     self.clear_cookie('code')
-                    self.set_secure_cookie('is_login', 'True',expires_days=3,expires = time.time()+60)
-                    self.set_secure_cookie('uname', userinfo.name,expires_days=3,expires = time.time()+60)
-                    self.set_secure_cookie('uid', str(userinfo.id),expires_days=3,expires = time.time()+60)
+                    self.set_secure_cookie('um', userinfo.name,expires_days=3,expires = time.time()+900)
+                    self.set_secure_cookie('uid', str(userinfo.id),expires_days=3,expires = time.time()+900)
                     dic['typeid'] = 2
                     self.write(json.dumps(dic))
                 else:
@@ -81,7 +74,7 @@ class LoginHandler(BaseHandler):
 class DropoutHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.clear_all_cookies()
-        self.redirect('/index')
+        self.redirect('/login')
 
 class LogoutHandler(BaseHandler):
     def get(self, *args, **kwargs):

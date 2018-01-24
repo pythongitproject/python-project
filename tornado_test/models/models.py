@@ -10,7 +10,7 @@ class UserInfo(Base):
     __tablename__ = 'userinfo'
     id = Column(Integer,primary_key=True,autoincrement=True)
     name = Column(String(20),nullable=False)
-    telno = Column(String(20),nullable=False)
+    telno = Column(String(11),nullable=False)
     pwd = Column(String(20),nullable=False)
     adddate = Column(DateTime,nullable=False)
 

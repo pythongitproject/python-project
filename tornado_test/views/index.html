@@ -2,32 +2,33 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
-
     <link href='{{static_url("index/css/amazeui.min.css")}}'  rel="stylesheet">
     <link href='{{static_url("index/css/admin.css")}}'  rel="stylesheet">
     <link href='{{static_url("index/css/app.css")}}'  rel="stylesheet">
     <link href='{{static_url("index/css/bootstrap.min.css")}}'  rel="stylesheet">
     <link rel="shortcut icon" href='{{static_url("favicon.ico")}}'>
-
 </head>
 <body style="background-color: #f5f5f5" >
 <header class="am-topbar am-topbar-inverse admin-header">
     <div class="am-topbar-brand">
-        <a href="javascript:;" class="tpl-logo" style="padding-top: 20px">
+        <a href="javascript:;" class="tpl-logo " style="padding-top: 20px">
             <img src='{{static_url("index/img/logo.png")}}' alt="" >
         </a>
     </div>
-    </div>
-    <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
-        <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
-            <li class="am-hide-sm-only"></li>
-            <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
-                <a class="am-dropdown-toggle tpl-header-list-link" href="">
-                    <span class="tpl-header-list-user-nick" >{{uname}}</span><span class="tpl-header-list-user-ico"></span>
+   <div class="am-collapse am-topbar-collapse am-topbar-right" id="topbar-collapse" style="padding-right: 10%">
+        <ul class="am-nav am-nav-pills">
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;" style="color: black">
+                    {{username}} <span class="am-icon-caret-down"></span>
                 </a>
+                <ul class="am-dropdown-content">
+                    <li><a href="#">修改个人信息</a></li>
+                    <li><a href="/dropout">退出登录</a></li>
+                  </ul>
             </li>
         </ul>
     </div>
+
 </header>
 <div class="tpl-page-container tpl-page-header-fixed" >
     <div class="tpl-left-nav tpl-left-nav-hover" >
@@ -49,19 +50,13 @@
                 </li>
                 <li class="tpl-left-nav-item">
                     <a href="" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-internet-explorer"></i>
-                        <span>测试环境</span>
-                    </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                    <a href="" class="nav-link tpl-left-nav-link-list">
                         <i class="am-icon-adn"></i>
                         <span>模块</span>
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
                     <a href="" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-internet-explorer"></i>
+                        <i class="am-icon-spinner am-icon-pulse"></i>
                         <span>接口</span>
                     </a>
                 </li>
@@ -78,9 +73,9 @@
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <a href="" class="nav-link tpl-left-nav-link-list" target="_blank">
-                        <i class="am-icon-server"></i>
-                        <span>mock-server</span>
+                    <a href="" class="nav-link tpl-left-nav-link-list">
+                        <i class="am-icon-refresh am-icon-spin"></i>
+                        <span>测试环境</span>
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
@@ -89,12 +84,12 @@
                         <span>测试报告</span>
                     </a>
                 </li>
-                    <li class="tpl-left-nav-item">
-                        <a href="" class="nav-link tpl-left-nav-link-list">
-                            <span class=" am-icon-user"></span>
-                            <span>用户管理</span>
-                        </a>
-                    </li>
+                <li class="tpl-left-nav-item">
+                    <a href="" class="nav-link tpl-left-nav-link-list">
+                        <i class="am-icon-user"></i>
+                        <span>用户管理</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -179,12 +174,11 @@
     </div>
     <div class="row" style="padding-left: 30px">
         <h3 >根据这里的版本可以在<a href="">用例</a>或者<a href="">测试接口</a>模块导入相应的测试用例或者测试接口</h3>
-        <a href="">接口模板</a>
-        <a href="">测试用例模板</a>
     </div>
 
     <script src="{{static_url('common/js/jquery-3.2.1.min.js')}}"></script>
     <script src='{{static_url("plugins/bootstrap3/js/bootstrap.js")}}'></script>
+    <script src='{{static_url("index/js/amazeui.min.js")}}'></script>
     <script src='{{static_url("index/js/echarts.common.min.js")}}'></script>
 
 </body>
