@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 HOSTNAME = '127.0.0.1'
 PORT = '3306'
-DATABASE = 'boot'
+DATABASE = 'testhoutai'
 USERNAME = 'root'
 PASSWORD = '123456a'
 

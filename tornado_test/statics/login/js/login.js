@@ -15,20 +15,31 @@
         var flag = true;
             if($("#telno").val().trim()==''){
                 flag=false;
-                $("#msg").text('手机号码不能为空哦');
+                $("#terror").text('手机号码不能为空哦');
+                $("#perror").text('');
+                 $("#cerror").text('');
             }else {
+                $("#terror").text('');
                 if ($("#telno").val().trim().length<11 || isPoneAvailable($("#telno").val().trim())){
                     flag=false;
-                    $("#msg").text('请输入11位的手机号码哦');
+                    $("#terror").text('请输入11位的手机号码哦');
+                    $("#perror").text('');
+                    $("#cerror").text('');
                 }else {
                     if($("#pwd").val().trim()==''){
                         flag=false;
-                        $("#msg").text('登录密码不能为空哦');
+                        $("#perror").text('登录密码不能为空哦');
+                         $("#cerror").text('');
+                         $("#terror").text('');
                     }else {
+                        $("#perror").text('');
                         if ($("#code").val().trim()==''){
                             flag=false;
-                            $("#msg").text('验证码不能为空哦');
+                            $("#cerror").text('验证码不能为空哦');
+                            $("#perror").text('');
+                            $("#terror").text('');
                         }else {
+                            $("#cerror").text('');
                              if(flag){
                             $.post("/login",
                             {"telno":$("#telno").val().trim(),"password":$("#pwd").val().trim(),"code":$("#code").val().trim()},
@@ -46,26 +57,19 @@
                                            $("#pwd").val("");
                                            $("#code").val("");
                                            Changecode();
-                                           $("#msg").text(ret_dict.msg);
+                                           $("#terror").text(ret_dict.msg);
                                            break;
                                        case -2 :
-                                           Changecode();
-                                           $("#code").val("");
-                                            $("#msg").text(ret_dict.msg);
+                                            $("#cerror").text(ret_dict.msg);
+                                            $("#code").val("");
+                                            Changecode();
                                            break;
                                        case -3 :
-                                           layer.msg('该用户不存在哦', {
-                                              time: 0 //不自动关闭
-                                              ,btn: ['点击注册', '再试下']
-                                              ,yes: function(index){
-                                                layer.close(index);
-                                                window.location.href = "/signup";
-                                              }
-                                            });
-                                           Changecode();
+                                           $("#terror").text(ret_dict.msg);
                                            $("#telno").val("");
                                            $("#pwd").val("");
                                            $("#code").val("");
+                                           Changecode();
                                            break;
                                        default:
                                            alert('网络君闹情绪了,请重试！')
@@ -75,12 +79,9 @@
                             });
                         }
                         }
-
                     }
                 }
-
             }
-
     });
 
 

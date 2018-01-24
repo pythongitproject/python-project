@@ -3,8 +3,9 @@
 import tornado.web
 from sqlalchemy.sql import and_,or_
 import json, datetime
-from tornado_drawer.utils import db
-from tornado_drawer.models.models import *
+from tornado_test.utils import db
+from tornado_test.models.models import *
+
 #基类
 class BaseHandler(tornado.web.RequestHandler):
     def get(self, *args, **kwargs):
@@ -27,120 +28,16 @@ class Check_codeHandler(BaseHandler):
 class IndexHandler(BaseHandler):
     def get(self, *args, **kwargs):
         status = self.get_secure_cookie('is_login')
-        telno = self.get_secure_cookie('telno')
-        uname = self.get_secure_cookie('username')
-        poststype = self.get_argument('posts_type',None)
-        try:
-            item_list = self.db.query(Posts.id,Posts.title,UserInfo.name,Posts.content,Posts.adddate,Posts.click_count,Posts.like_count).join(UserInfo).order_by(Posts.adddate.desc(),Posts.click_count.desc(),Posts.like_count.desc()).all()[0:3]
-            self.db.close()
-        except:
-            item_list = ''
-        if telno:
-            uinfo = self.db.query(UserInfo).filter_by(telno=bytes.decode(telno)).first()
-            self.db.close()
-            if status:
-                self.render('index.html', flag=bytes.decode(status), username=bytes.decode(uname), item_list=item_list)
-            else:
-                self.render('index.html', flag=None, username=None, item_list=item_list)
-        else:
-            self.render('index.html',flag=None,username=None,item_list=item_list)
-
-class Single_indexHandler(BaseHandler):
-    def get(self, *args, **kwargs):
-        status = self.get_secure_cookie('is_login')
-        uname = self.get_secure_cookie('username')
-        userid = self.get_secure_cookie('userid')
-        if status and uname and userid:
-            item_list = self.db.query(Posts.id, Posts.title, UserInfo.name, Posts.content, Posts.adddate,
-                                      Posts.click_count, Posts.like_count).join(UserInfo).filter(
-                Posts.user_id == bytes.decode(userid)).order_by(Posts.adddate.desc(), Posts.click_count.desc(),
-                                                  Posts.like_count.desc()).all()[0:3]
-            self.db.close()
-            if item_list:
-                self.render('singleindex.html', flag=bytes.decode(status), username=bytes.decode(uname),
-                            item_list=item_list)
-            else:
-                self.render('index.html', flag=bytes.decode(status), username=bytes.decode(uname), item_list='')
+        uid = self.get_secure_cookie('uid')
+        uname = self.get_secure_cookie('uname')
+        if status and uid :
+            self.render('index.html',username= uname)
         else:
             self.redirect('/login')
 
-class RegisterHandler(BaseHandler):
-    def get(self, *args, **kwargs):
-        self.render('register.html',status_text='')
-
-    def post(self, *args, **kwargs):
-        dic = {'status': True, 'msg': '', 'typeid': 0}
-        username = self.get_argument('username')
-        password = self.get_argument('password')
-        telno = self.get_argument('telno')
-        try:
-            uinfo = self.db.query(UserInfo).filter_by(telno=telno).first()
-        except:
-            dic['status'] = False
-            dic['msg'] = '网络闹情绪了，请重试！'
-            dic['typeid'] = -3
-            self.write(json.dumps(dic))
-        if uinfo:
-            dic['status'] = False
-            dic['msg'] = '该用户已存在'
-            dic['typeid'] = -2
-            self.write(json.dumps(dic))
-        else:
-            try:
-                adddate = datetime.datetime.now()
-                self.db.add(UserInfo(name=username, telno=telno, pwd=password, adddate=adddate))
-                self.db.commit()
-                self.db.close()
-                dic['msg'] = '注册成功，点击跳往登录页'
-                self.write(json.dumps(dic))
-            except:
-                dic['status'] = False
-                dic['msg'] = '注册失败，请重试！'
-                dic['typeid'] = -1
-                self.write(json.dumps(dic))
-
-class ClickHandler(BaseHandler):
-    def post(self, *args, **kwargs):
-        dict = {'status': True,'typeid':1 ,'msg':'完美的一击~'}
-        userid = self.get_secure_cookie('userid')
-        if userid:
-            userid = bytes.decode(userid)
-            newsid = self.get_argument('newsid')
-            click_count = int(self.get_argument('click_count'))
-            import time
-            adddate = time.strftime("%Y-%m-%d", time.localtime())
-            count = self.db.query(ClickPosts).filter(ClickPosts.postsid ==newsid,ClickPosts.user_id ==userid,ClickPosts.adddate >= adddate ).count()
-            if count>0 :
-                dict['status'] = False
-                dict['typeid'] = -3
-                dict['msg'] = '今天已点赞，明天赶脚哦~'
-                self.write(json.dumps(dict))
-            else:
-                try:
-                    cpost = ClickPosts(postsid=newsid, user_id=userid, adddate=datetime.datetime.now())
-                    self.db.add(cpost)
-                    click_count += 1
-                    print(click_count)
-                    self.db.query(Posts).filter(Posts.id==newsid).update({Posts.click_count:click_count})
-                    print(2)
-                    self.db.commit()
-                    self.db.close()
-                    self.write(json.dumps(dict))
-                except:
-                    dict['status'] = False
-                    dict['typeid'] = -4
-                    dict['msg'] = '姿势不对，点赞失败了~'
-                    self.db.close()
-                    self.write(json.dumps(dict))
-        else:
-            dict['status'] = False
-            dict['typeid'] = -1
-            dict['msg'] = '登录才可以点赞哦~'
-            self.write(json.dumps(dict))
-
 class LoginHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        self.render('login.html',status_text ='')
+        self.render('login.html')
 
     def post(self, *args, **kwargs):
         telno = self.get_argument('telno',None)
@@ -153,15 +50,16 @@ class LoginHandler(BaseHandler):
             except:
                 dic['status'] = False
                 dic['typeid'] = -3
-                dic['msg'] = '该用户不存在,请注册后登录！'
+                dic['msg'] = '该用户不存在,请联系管理员！'
                 self.write(json.dumps(dic))
             if userinfo:
                 if pwd == userinfo.pwd :
+                    import time
+                    #expires_day=None, 或者expires_day=3, 即3天, 都不会影响expires的, 因为expires比expires_days 的优先级高些. 所以这里设置为15分钟可以简化为
                     self.clear_cookie('code')
-                    self.set_secure_cookie('is_login', 'True')
-                    self.set_secure_cookie('telno', telno)
-                    self.set_secure_cookie('username', userinfo.name)
-                    self.set_secure_cookie('userid', str(userinfo.id))
+                    self.set_secure_cookie('is_login', 'True',expires_days=3,expires = time.time()+60)
+                    self.set_secure_cookie('uname', userinfo.name,expires_days=3,expires = time.time()+60)
+                    self.set_secure_cookie('uid', str(userinfo.id),expires_days=3,expires = time.time()+60)
                     dic['typeid'] = 2
                     self.write(json.dumps(dic))
                 else:
@@ -172,7 +70,7 @@ class LoginHandler(BaseHandler):
             else:
                 dic['status'] = False
                 dic['typeid'] = -3
-                dic['msg'] = '该用户不存在,请注册后登录！'
+                dic['msg'] = '该用户不存在,请联系管理员！'
                 self.write(json.dumps(dic))
         else:
             dic['status'] = False
@@ -197,28 +95,8 @@ class LogoutHandler(BaseHandler):
         except:
             self.redirect('/index')
 
-class ReleaseHandler(BaseHandler):
-    def post(self, *args, **kwargs):
-        dd = {
-            'status':True,
-            'typeid':1
-        }
-        title = self.get_argument('title')
-        content = self.get_argument('content')
-        adddate = datetime.datetime.now()
-        telno = bytes.decode(self.get_secure_cookie('telno'))
-        u1 = self.db.query(UserInfo).filter_by(telno=telno).first()
-        p1 = Posts(title=title, content=content, adddate=adddate)
-        u1.pts.append(p1)
-        self.db.add(p1)
-        try:
-            self.db.commit()
-            self.db.close()
-            self.write(json.dumps(dd))
-        except:
-            dd['typeid'] = -1
-            dd['status'] = False
-            self.write(json.dumps(dd))
+
+
 
 
 
