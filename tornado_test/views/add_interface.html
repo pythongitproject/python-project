@@ -10,35 +10,10 @@
                     <span class="am-icon-code"></span> 添加接口
                 </div>
             </div>
-
-            <!--<form >
-                <div class="form-group am-input-group">
-                    <strong>接口名字:</strong>
-                    <input type="text" class="am-form-field"  placeholder="接口名字">
-                </div>
-                <span></span>
-                 <div class="form-group" >
-                     <strong style="margin-bottom: 30px">请求方式:</strong><br>
-                     <select data-am-selected>
-                         <option value="GET" selected>GET</option>
-                         <option value="POST">POST</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <strong>接口地址:</strong>
-                    </div>
-                <span></span>
-                <div class="form-group">
-                    <strong>接口headers:</strong>
-                    </div>
-                <span></span>
-                <button type="submit" class="am-btn am-btn-primary ">添加</button>
-            </form>-->
-
             <form class="am-form am-form-horizontal">
-                <div class="am-form-group am-input-lg" style="width: 50%">
+                <div class="am-form-group am-input-lg" style="width: 20%">
                   <label >接口名字:</label>
-                  <input type="email" class="am-form-field"  placeholder="请输入接口名字">
+                  <input type="email" class="am-form-field"  placeholder="请输入接口名字" maxlength="50">
                 </div>
                  <div class="form-group" >
                      <label >请求方式:</label><br/>
@@ -48,37 +23,57 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label >Body参数名称:</label><br/>
-                     <button type="button" class="am-btn am-btn-primary ">添加参数</button>
-                    <button type="button" class="am-btn am-btn-primary ">批量添加RAW参数</button>
+                     <label >Body参数名称:</label><br/>
+                     <button type="button" class="am-btn am-btn-default ">添加参数</button>&nbsp;&nbsp;
+                     <button type="button" class="am-btn am-btn-success ">批量添加RAW参数</button>
                 </div>
                 <span></span>
 
                  <div class="form-group">
                     <label >Header名称:</label><br/>
-                     <button type="button" class="am-btn am-btn-primary ">添加Header</button>
-                    </div>
+                     <button type="button" class="am-btn am-btn-default ">添加Header</button>
+                 </div>
                 <span></span>
-                <button type="button" class="am-btn am-btn-primary ">发送请求</button>
-                <button type="button" class="am-btn am-btn-primary ">保存接口</button>
+                <button type="button" class="am-btn am-btn-primary ">发送请求</button>&nbsp;&nbsp;
+                <button type="button" class="am-btn am-btn-warning ">保存接口</button>
             </form>
             <!--返回状态码-->
-            <span>200 ok</span>
-            <!--返回请求头-->
             <div class="form-group">
-                <span>Response Header	:</span>
-                <pre id="returnheader">''</pre>
+                <span>Response status:</span><br/>
+                <code style="font-size: large">200 ok</code>
+            </div>
+            <!--返回请求头-->
+            <div class="form-group" style="width: 50%">
+                <span>Response Header:</span>
+                <pre id="returnheader" class="am-pre-scrollable">
+                    content-language:zh-CN
+                    content-type:text/html;charset=UTF-8
+                    date:Thu, 25 Jan 2018 07:08:00 GMT
+                    status:200
+                    timing-allow-origin:*
+                </pre>
             </div>
             <!--返回body-->
-            <div class="form-group">
+            <div class="form-group" style="width: 50%;">
                 <span>Response Body:</span>
-                <pre id="return_json">''</pre>
+                <pre id="return_json" class="am-pre-scrollable">
+                    {
+                        "error": 0,
+                        "status": "success",
+                        "date": "2018-01-01"
+                    }
+                </pre>
             </div>
 
         </div>
 
     </div>
 
+
+<!--<button class="am-btn am-btn-default">
+  <i class="am-icon-spinner am-icon-spin"></i>
+  加载中
+</button>-->
 
 
 </div>
