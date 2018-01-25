@@ -1,59 +1,73 @@
 {%extends 'common.html' %}
 {%block content%}
     <div class="tpl-content-wrapper" style="margin-left: 0.7%">
-        <div class="tpl-content-page-title">
-           
-        </div>
+
         <div class="tpl-portlet-components">
+
             <div class="portlet-title">
                 <div class="caption font-green bold">
                     <span class="am-icon-code"></span> 添加接口
                 </div>
             </div>
-            <form class="am-form am-form-horizontal am-input-lg">
 
-                <div class="am-form-inline" role="form">
-                    <strong style="margin-right:15px">接口类型/名称: </strong>
-                  <div class="am-form-group" style="width: 8%">
-                    <select data-am-selected="{btnWidth: '100%',btnSize: 'lg'}">
+            <!--类型、名称-->
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <strong>类型/名称: </strong>
+                  </div>
+                  <div class="form-group">
+                    <select data-am-selected="{btnWidth: '100%',btnSize: 'sm'}">
                          <option value="GET" selected>GET</option>
                          <option value="POST">POST</option>
                     </select>
                   </div>
-                  <div style="width: 80%;float: right;padding-right: 30%">
-                     <input type="text" class="am-input-lg"  placeholder="请输入接口名称">
+                  <div class="form-group">
+                     <input type="text" class="form-control"  placeholder="请输入接口名称" size="50" maxlength="90">
+                      <span style="color: red"></span>
                   </div>
-                </div>
+            </div>
 
-                <div class="am-input-group " style="width: 70%">
+            <!--URL地址-->
+            <div class="form-group" style="width: 50%">
                   <label >URL地址:</label>
-                  <input type="text" class="am-form-field"  placeholder="请输入URL地址">
-                </div>
-                <div class="am-input-group" style="margin-top: 10px">
-                     <label >Body参数名称:</label><br/>
-                     <button type="button" class="am-btn am-btn-default " id="bodyparam1">添加参数</button>&nbsp;&nbsp;
-                     <button type="button" class="am-btn am-btn-success " id="bodyparam2">批量添加RAW参数</button>
-                </div>
-                <span></span>
+                  <input type="text" class="form-control"  placeholder="请输入URL地址">
+                  <span style="color: red"></span>
+            </div>
 
-                 <div class="am-input-group" style="margin-top: 10px">
-                    <label >Header名称:</label><br/>
-                     <button type="button" class="am-btn am-btn-default headerparam">添加Header</button>
-                 </div>
-                <span></span>
-                <button style="margin-top: 10px" type="button" class="am-btn am-btn-primary btn-loading-example"
-                        data-am-loading="{spinner: 'circle-o-notch', loadingText: '请求中...', resetText: '请求完毕'}">发送请求</button>&nbsp;&nbsp;
-                <button style="margin-top: 10px" type="button" class="am-btn am-btn-warning ">保存接口</button>
-            </form>
-            <!--返回状态码-->
+             <!--Body参数名称-->
             <div class="form-group">
+                <label >Body参数名称:</label><br/>
+                <div class="form-inline">
+                     <button type="button" class="btn btn-default" id="addbody">添加Body参数</button>&nbsp;&nbsp;
+                     <button type="button" class="btn btn-success" id="addram">批量添加Raw参数</button>
+                     <span style="color: red"></span>
+                </div>
+            </div>
+
+            <!--Header名称-->
+            <div class="form-group">
+                    <label >Header名称:</label><br>
+                     <button type="button" class="btn btn-default" id="addheader">添加Header</button>
+                 </div>
+
+
+            <!--发送、保存-->
+            <div class="form-inline" >
+                <button  type="button" class="btn btn-primary">发送请求</button>&nbsp;&nbsp;
+                <button  type="button" class="btn btn-warning ">保存接口</button>
+            </div>
+
+            <h5>预期结果：</h5>
+            <!--返回状态码-->
+            <div class="form-group" style="margin-top: 10px">
                 <span>Response status:</span><br/>
                 <code style="font-size: large">200</code>
             </div>
+
             <!--返回请求头-->
             <div class="form-group" style="width: 50%">
                 <span>Response Header:</span>
-                <pre id="returnheader" class="am-pre-scrollable">
+                <pre id="returnheader" class="am-pre-scrollable ">
                     content-language:zh-CN
                     content-type:text/html;charset=UTF-8
                     date:Thu, 25 Jan 2018 07:08:00 GMT
@@ -61,6 +75,7 @@
                     timing-allow-origin:*
                 </pre>
             </div>
+
             <!--返回body-->
             <div class="form-group" style="width: 50%;">
                 <span>Response Body:</span>
@@ -72,44 +87,45 @@
                     }
                 </pre>
             </div>
+
         </div>
     </div>
 
 </div>
 <script>
-    $('.btn-loading-example').click(function () {
-      var $btn = $(this)
-      $btn.button('loading');
-        setTimeout(function(){
-          $btn.button('reset');
-      }, 3000);
-    });
-    
-    $('#bodyparam1').click(function () {
-        $('#bodyparam1').parent().append('<div class="am-form-inline" style="margin-top: 10px;">\n' +
-            '  <div  style="float: left;width: 325px">\n' +
-            '    <input type="text" class="" placeholder="key">\n' +
+    $('#addbody').click(function () {
+        $(this).parent().append('<div class="form-inline" style="margin-top: 10px">\n' +
+            '  <div class="form-group">\n' +
+            '    <input type="text" class="form-control" placeholder="key" size="30">\n' +
             '  </div>\n' +
             '\n' +
-            '  <div style="float: right;width: 700px">\n' +
-            '  <input type="password"  placeholder="value">' +
-            '  <span type="button" class="am-btn am-btn-danger">删除</span>'+
+            '  <div class="form-group" >\n' +
+            '  <input type="text" class="form-control"  placeholder="value" size="51">' +
+            '  <input type="button" onclick="rmbody();" class="btn btn-danger rmip" value="移除"/>'+
             '  </div>\n' + '</div>');
     });
 
-    $('.headerparam').click(function () {
-        $('.headerparam').parent().append('<div class="am-form-inline" style="margin-top: 10px;">\n' +
-            '  <div  style="float: left;width: 325px">\n' +
-            '    <input type="text" class="" placeholder="key">\n' +
+    $('#addheader').click(function () {
+        $(this).parent().append('<div class="form-inline" style="margin-top: 10px">\n' +
+            '  <div class="form-group">\n' +
+            '    <input type="text" class="form-control" placeholder="key" size="30">\n' +
             '  </div>\n' +
             '\n' +
-            '  <div style="float: right;width: 700px">\n' +
-            '  <input type="password"  placeholder="value">' +
-            '  <span type="button" class="am-btn am-btn-danger">删除</span>'+
+            '  <div class="form-group" >\n' +
+            '  <input type="text" class="form-control"  placeholder="value" size="51">' +
+            '  <input type="button"  class="btn btn-danger" value="移除"/>'+
             '  </div>\n' + '</div>');
     });
 
-    
+    function rmbody() {
+        console.log(1);
+        $(this).parent().remove();
+        console.log(2);
+    }
+
+
+
+
 </script>
 {%end%}
 
