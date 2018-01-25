@@ -10,31 +10,40 @@
                     <span class="am-icon-code"></span> 添加接口
                 </div>
             </div>
-            <form class="am-form am-form-horizontal">
-                <div class="am-form-group am-input-lg" style="width: 20%">
-                  <label >接口名字:</label>
-                  <input type="email" class="am-form-field"  placeholder="请输入接口名字" maxlength="50">
-                </div>
-                 <div class="form-group" >
-                     <label >请求方式:</label><br/>
-                     <select data-am-selected>
+            <form class="am-form am-form-horizontal am-input-lg">
+
+                <div class="am-form-inline" role="form">
+                    <strong>请求接口类型/名称: </strong>
+                  <div class="am-input-group">
+                    <select data-am-selected="{btnWidth: '100%',btnSize: 'lg'}">
                          <option value="GET" selected>GET</option>
                          <option value="POST">POST</option>
                     </select>
+                  </div>
+                  <div class="am-input-group">
+                     <input type="text" class="am-form-field"  placeholder="请输入接口名称">
+                  </div>
                 </div>
-                <div class="form-group">
+
+                <div class="am-input-group " style="width: 80%">
+                  <label >URL地址:</label>
+                  <input type="text" class="am-form-field"  placeholder="请输入URL地址">
+                </div>
+                <div class="am-input-group">
                      <label >Body参数名称:</label><br/>
-                     <button type="button" class="am-btn am-btn-default ">添加参数</button>&nbsp;&nbsp;
-                     <button type="button" class="am-btn am-btn-success ">批量添加RAW参数</button>
+                     <button type="button" class="am-btn am-btn-default " id="bodyparam1">添加参数</button>&nbsp;&nbsp;
+                     <button type="button" class="am-btn am-btn-success " id="bodyparam2">批量添加RAW参数</button>
                 </div>
                 <span></span>
 
-                 <div class="form-group">
+                 <div class="am-input-group">
                     <label >Header名称:</label><br/>
                      <button type="button" class="am-btn am-btn-default ">添加Header</button>
                  </div>
                 <span></span>
-                <button type="button" class="am-btn am-btn-primary ">发送请求</button>&nbsp;&nbsp;
+                <button type="button" class="am-btn am-btn-primary btn-loading-example"
+                        data-am-loading="{spinner: 'circle-o-notch', loadingText: '拼命请求中...', resetText: '请求完毕'}">发送请求</button>&nbsp;&nbsp;
+                <!--<button type="button" class="am-btn am-btn-primary ">发送请求</button>-->
                 <button type="button" class="am-btn am-btn-warning ">保存接口</button>
             </form>
             <!--返回状态码-->
@@ -64,18 +73,32 @@
                     }
                 </pre>
             </div>
-
         </div>
-
     </div>
 
-
-<!--<button class="am-btn am-btn-default">
-  <i class="am-icon-spinner am-icon-spin"></i>
-  加载中
-</button>-->
-
-
 </div>
+<script>
+    $('.btn-loading-example').click(function () {
+      var $btn = $(this)
+      $btn.button('loading');
+        setTimeout(function(){
+          $btn.button('reset');
+      }, 3000);
+    });
+    
+    $('#bodyparam1').click(function () {
+        $('#bodyparam1').parent().append('<div class="am-form-inline" role="form">\n' +
+            '  <div class="am-form-group">\n' +
+            '    <input type="email" class="am-form-field" placeholder="key">\n' +
+            '  </div>\n' +
+            '\n' +
+            '  <div class="am-form-group">\n' +
+            '    <input type="password" class="am-form-field" placeholder="value">\n' +
+            '  </div>\n' +
+            '\n' + '</div>');
+    });
 
+    
+</script>
 {%end%}
+

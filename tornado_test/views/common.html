@@ -7,14 +7,7 @@
     <link href='{{static_url("index/css/app.css")}}'  rel="stylesheet">
     <link href='{{static_url("index/css/bootstrap.min.css")}}'  rel="stylesheet">
     <link rel="shortcut icon" href='{{static_url("favicon.ico")}}'>
-    <style>
-    pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
-    .string { color: green; }
-    .number { color: darkorange; }
-    .boolean { color: blue; }
-    .null { color: magenta; }
-    .key { color: red; }
-</style>
+
 </head>
 <body style="background-color: #f5f5f5" >
 <header class="am-topbar am-topbar-inverse admin-header">
@@ -26,11 +19,11 @@
    <div class="am-collapse am-topbar-collapse am-topbar-right" id="topbar-collapse" style="padding-right: 10%">
         <ul class="am-nav am-nav-pills">
             <li class="am-dropdown" data-am-dropdown>
-                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;" style="color: black">
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;" style="color: black;font-size: large">
                     {{username}} <span class="am-icon-caret-down"></span>
                 </a>
                 <ul class="am-dropdown-content">
-                    <li><a href="#">修改个人信息</a></li>
+                    <li><a href="#" >修改个人信息</a></li>
                     <li><a href="/dropout">退出登录</a></li>
                   </ul>
             </li>
@@ -38,11 +31,11 @@
     </div>
 
 </header>
-<div class="tpl-page-container tpl-page-header-fixed" >
+<div class="tpl-page-container tpl-page-header-fixed " >
     <div class="tpl-left-nav tpl-left-nav-hover" >
         <div class="tpl-left-nav-title">
         </div>
-        <div class="tpl-left-nav-list">
+        <div class="tpl-left-nav-list ">
             <ul class="tpl-left-nav-menu">
                 <li class="tpl-left-nav-item">
                     <a href="" class="nav-link ">
@@ -102,15 +95,16 @@
         </div>
     </div>
 </div>
+<script src="{{static_url('common/js/jquery-3.2.1.min.js')}}"></script>
+    <script src='{{static_url("plugins/bootstrap3/js/bootstrap.js")}}'></script>
+    <script src='{{static_url("index/js/amazeui.min.js")}}'></script>
+    <script src='{{static_url("index/js/echarts.common.min.js")}}'></script>
 {% block content%}
 {% end %}
 
     {% block indexshooter%}
     {% end %}
-    <script src="{{static_url('common/js/jquery-3.2.1.min.js')}}"></script>
-    <script src='{{static_url("plugins/bootstrap3/js/bootstrap.js")}}'></script>
-    <script src='{{static_url("index/js/amazeui.min.js")}}'></script>
-    <script src='{{static_url("index/js/echarts.common.min.js")}}'></script>
+
 
 </body>
 </html>
