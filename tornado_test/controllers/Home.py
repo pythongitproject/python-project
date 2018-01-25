@@ -88,6 +88,10 @@ class LogoutHandler(BaseHandler):
         except:
             self.redirect('/index')
 
+class UserAdminHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        self.render('add_interface.html',username ='linweili',inte='')
+
 
 
 

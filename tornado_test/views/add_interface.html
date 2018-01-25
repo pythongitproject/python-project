@@ -1,0 +1,86 @@
+{%extends 'common.html' %}
+{%block content%}
+    <div class="tpl-content-wrapper" style="margin-left: 0.7%">
+        <div class="tpl-content-page-title">
+           
+        </div>
+        <div class="tpl-portlet-components">
+            <div class="portlet-title">
+                <div class="caption font-green bold">
+                    <span class="am-icon-code"></span> 添加接口
+                </div>
+            </div>
+
+            <!--<form >
+                <div class="form-group am-input-group">
+                    <strong>接口名字:</strong>
+                    <input type="text" class="am-form-field"  placeholder="接口名字">
+                </div>
+                <span></span>
+                 <div class="form-group" >
+                     <strong style="margin-bottom: 30px">请求方式:</strong><br>
+                     <select data-am-selected>
+                         <option value="GET" selected>GET</option>
+                         <option value="POST">POST</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <strong>接口地址:</strong>
+                    </div>
+                <span></span>
+                <div class="form-group">
+                    <strong>接口headers:</strong>
+                    </div>
+                <span></span>
+                <button type="submit" class="am-btn am-btn-primary ">添加</button>
+            </form>-->
+
+            <form class="am-form am-form-horizontal">
+                <div class="am-form-group am-input-lg" style="width: 50%">
+                  <label >接口名字:</label>
+                  <input type="email" class="am-form-field"  placeholder="请输入接口名字">
+                </div>
+                 <div class="form-group" >
+                     <label >请求方式:</label><br/>
+                     <select data-am-selected>
+                         <option value="GET" selected>GET</option>
+                         <option value="POST">POST</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label >Body参数名称:</label><br/>
+                     <button type="button" class="am-btn am-btn-primary ">添加参数</button>
+                    <button type="button" class="am-btn am-btn-primary ">批量添加RAW参数</button>
+                </div>
+                <span></span>
+
+                 <div class="form-group">
+                    <label >Header名称:</label><br/>
+                     <button type="button" class="am-btn am-btn-primary ">添加Header</button>
+                    </div>
+                <span></span>
+                <button type="button" class="am-btn am-btn-primary ">发送请求</button>
+                <button type="button" class="am-btn am-btn-primary ">保存接口</button>
+            </form>
+            <!--返回状态码-->
+            <span>200 ok</span>
+            <!--返回请求头-->
+            <div class="form-group">
+                <span>Response Header	:</span>
+                <pre id="returnheader">''</pre>
+            </div>
+            <!--返回body-->
+            <div class="form-group">
+                <span>Response Body:</span>
+                <pre id="return_json">''</pre>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</div>
+
+{%end%}

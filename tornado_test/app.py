@@ -3,13 +3,15 @@
 import tornado.web
 import tornado.ioloop
 from tornado_test.controllers import Home
+import tornado.autoreload
 
 settings = {
     'static_path':'statics',
     'template_path':'views',
     'cookie_secret':'MTg4MTQyODg3ODQrMjAxOC0wMS0yMCAwMTowMDowMA',
     'login_url': '/login',
-    'xsrf_cookies':True
+    'xsrf_cookies':True,
+    #'debug':True
 }
 application = tornado.web.Application([
     (r'/', Home.LoginHandler),
@@ -17,6 +19,7 @@ application = tornado.web.Application([
     (r'/login',Home.LoginHandler),
     (r'/dropout',Home.DropoutHandler),
     (r'/check_code',Home.Check_codeHandler),
+    (r'/uadmin',Home.UserAdminHandler),
     ], **settings)
 
 if __name__ == '__main__':
