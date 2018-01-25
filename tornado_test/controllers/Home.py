@@ -92,6 +92,23 @@ class UserAdminHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render('add_interface.html',username ='linweili',inte='')
 
+import requests
+class RequestHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        url = self.get_argument('url',None)
+        dic = {'status':True}
+        if url:
+            params = self.get_argument('params',None)
+            cookies = self.get_argument('cookies',None)
+            timeout = self.get_argument('timeout',None)
+            r = requests.get(url=url,params=params,cookies=cookies,timeout=timeout)
+            dic['status_code'] = r.status_code
+            dic['response_header'] = r.headers
+            dic['response_content'] = r.json()
+            self.write(json.dumps(dic))
+        else:
+            dic['status'] = False
+            self.write(json.dumps(dic))
 
 
 
