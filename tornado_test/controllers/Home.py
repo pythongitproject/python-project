@@ -88,43 +88,41 @@ class LogoutHandler(BaseHandler):
         except:
             self.redirect('/index')
 
-class UserAdminHandler(BaseHandler):
-    def get(self, *args, **kwargs):
-        self.render('add_interface.html',username ='linweili',inte='')
-
-
-class RequestHandler(BaseHandler):
-    def get(self, *args, **kwargs):
-        url = self.get_argument('url',None)
-        dic = {'status':True}
-        if url:
-            params = self.get_argument('params',None)
-            cookies = self.get_argument('cookies',None)
-            timeout = self.get_argument('timeout',None)
-            r = requests.get(url=url,params=params,cookies=cookies,timeout=timeout)
-            dic['status_code'] = r.status_code
-            dic['response_header'] = r.headers
-            dic['response_content'] = r.json()
-            self.write(json.dumps(dic))
-        else:
-            dic['status'] = False
-            self.write(json.dumps(dic))
-
-import requests
 class TestHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, *args, **kwargs):
+        self.render('add_interface.html', username=self.current_user)
+
     def post(self, *args, **kwargs):
-        testurl = self.get_argument('testurl');
-        r = requests.get(testurl)
-        print(testurl)
-        print(r.headers)
-        print(r.json())
-        print(r.status_code)
-        dic = {
-            'status_code':r.status_code,
-           'head':str(r.headers),
-            'resbody':r.json()
-        }
-        self.write(json.dumps(dic))
+        tt = self.get_argument('types')
+        if tt.upper()=='GET':
+            print(1)
+            dic = {'type':1}
+            testurl = self.get_argument('testurl');
+            try:
+                r = requests.get(testurl,timeout = 2)
+                dic['status_code'] = r.status_code
+                dic['head'] = str(r.headers)
+                dic['resbody'] = r.json()
+                self.write(json.dumps(dic))
+            except:
+                dic = {'type': -1}
+                self.write(json.dumps(dic))
+        else:
+            print(2)
+            dic = {'type': 1}
+            testurl = self.get_argument('testurl');
+            try:
+                r = requests.post(testurl, timeout=2)
+                dic['status_code'] = r.status_code
+                dic['head'] = str(r.headers)
+                dic['resbody'] = r.json()
+                self.write(json.dumps(dic))
+            except:
+                dic = {'type': -1}
+                self.write(json.dumps(dic))
+
+
 
 
 
