@@ -19,7 +19,15 @@ application = tornado.web.Application([
     (r'/login',Home.LoginHandler),
     (r'/dropout',Home.DropoutHandler),
     (r'/check_code',Home.Check_codeHandler),
-    (r'/add_interface',Home.TestHandler),
+    (r'/interface',Home.InterfaceHandler),
+    (r'/test_yongli',Home.InterfaceCaseHandler),
+    (r'/events',Home.EventsHandler),
+    (r'/project',Home.ProjectHandler),
+    (r'/model',Home.ModelHandler),
+    (r'/admin',Home.AdminHandler),
+    (r'/test_result',Home.TestResultHandler),
+    (r'/timingtask',Home.TimingtaskHandler),
+    (r'/add_interface',Home.AddInterfaceHandler),
     ], **settings)
 
 if __name__ == '__main__':

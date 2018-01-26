@@ -1,0 +1,44 @@
+{% extends "common.html" %}
+{% block content %}
+    <div class="tpl-content-wrapper" style="margin-left: 10px">
+        <div class="tpl-portlet-components">
+            <div class="portlet-title">
+                <div class="caption font-green bold">
+                    <span class="am-icon-code"></span> 模块
+                </div>
+            </div>
+
+            <div class="tpl-block">
+                <div class="am-g">
+                    <div class="am-u-sm-12 am-u-md-6">
+                        <div class="am-btn-toolbar">
+                            <div class="am-btn-group am-btn-group-xs">
+                                <a href="">
+                                    <input type="button" name="" class="btn btn-default" value="添加">
+                                </a>
+                            </div>
+                        </div>
+                    </div></div>
+                <table class="am-table am-table-striped am-table-hover table-main" >
+                    <caption><strong></strong></caption>
+                    <thead>
+                    <tr>
+                        <th>模块名</th>
+                        <th>创建者</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>project.model_name</td>
+                            <td>project.users</td>
+                            <td>
+                                <span><a href=""><input type="button" value="编辑" class="btn btn-primary"></a></span>
+                                <span><a href=""><input type="button" value="删除" class="btn btn-danger"></a></span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+{% end %}

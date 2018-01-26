@@ -26,11 +26,11 @@
         }else {
             $(this).parent().append('<div class="form-inline bodyparam"  style="margin-top: 10px">\n' +
             '  <div class="form-group">\n' +
-            '    <input type="text" class="form-control" placeholder="key" size="35">\n' +
+            '    <input type="text" class="form-control " name="bdparam" placeholder="key" size="35">\n' +
             '  </div>\n' +
             '\n' +
             '  <div class="form-group" >\n' +
-            '  <input type="text" class="form-control"  placeholder="value" size="55">' +
+            '  <input type="text" class="form-control" name="bdparam" placeholder="value" size="55">' +
             '  <input type="button"  class="btn btn-danger rmip" onclick="rmbody(this);" value="移除"/>'+
             '  </div>\n' + '</div>');
         }
@@ -88,6 +88,47 @@
     });
 }
 
+    $("#testurl").blur(function () {
+        var strs=$("#testurl").val().trim();
+        if(strs!=''){
+             $('#urlerror').text('');
+        }else {
+                $('#urlerror').text('接口名称不能为空!');
+            }
+
+    });
+
+    $("#testname").blur(function () {
+        var strs=$("#testname").val().trim();
+        if(strs!=''){
+             $('#tnerror').text('');
+        }else {
+            $('#tnerror').text('接口名称不能为空!');
+        }
+
+    });
+
+    function urlComment() {
+         //验证url网址
+          var strs=$("#testurl").val().trim();
+          if (strs ==''){
+              $('#urlerror').text('URL地址不能为空!');
+              return false
+          }else {
+              //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
+              //下面的代码中应用了转义字符"\"输出一个字符"/"
+              var Expression=/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+              var objExp=new RegExp(Expression);
+              if(objExp.test(strs) != true){
+                  $('#urlerror').text('URL格式有误，请重新输入!');
+               return false;
+              } else {
+                  return true;
+                }
+          }
+
+        }
+
     $('#test').click(function () {
          var testname = $("#testname").val().trim();
             if (testname!=''){
@@ -132,43 +173,9 @@
 
     });
 
-    $("#testurl").blur(function () {
-        var strs=$("#testurl").val().trim();
-        if(strs!=''){
-             $('#urlerror').text('');
-        }else {
-                $('#urlerror').text('接口名称不能为空!');
-            }
-
+    $("#ceshi").click(function () {
+        $("input[name='bgparam']").each(function () {
+            console.log($(this)[0].val());
+            console.log($(this).get(1).val());
+        });
     });
-
-    $("#testname").blur(function () {
-        var strs=$("#testname").val().trim();
-        if(strs!=''){
-             $('#tnerror').text('');
-        }else {
-            $('#tnerror').text('接口名称不能为空!');
-        }
-
-    });
-
-    function urlComment() {
-         //验证url网址
-          var strs=$("#testurl").val().trim();
-          if (strs ==''){
-              $('#urlerror').text('URL地址不能为空!');
-              return false
-          }else {
-              //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
-              //下面的代码中应用了转义字符"\"输出一个字符"/"
-              var Expression=/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
-              var objExp=new RegExp(Expression);
-              if(objExp.test(strs) != true){
-                  $('#urlerror').text('URL格式有误，请重新输入!');
-               return false;
-              } else {
-                  return true;
-                }
-          }
-
-        }

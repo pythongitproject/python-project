@@ -1,0 +1,96 @@
+{% extends "common.html" %}
+{% block content %}
+    <div class="tpl-content-wrapper " style="margin-left: 10px">
+        <div class="tpl-content-page-title">  </div>
+        <div class="tpl-portlet-components">
+            <div class="portlet-title">
+                <div class="caption font-green bold">
+                    <span class="am-icon-code"></span> 用例
+                </div>
+            </div>
+            <form method="POST" action="">
+                <strong >项目:</strong>
+                <select name='project'>
+                    <option value ="" >请选择</option>
+                        <option value ="project.id" >project.project_name</option>
+                </select>
+                <strong >模块:</strong><select name='model'>
+                <option value ="" >请选择</option>
+                <option value ="model.id" >model.model_name</option>
+            </select>
+                <input type="submit" value="查询" class="btn btn-default">
+            </form>
+            <form method="POST" action="">
+                <div style="margin-top: 10px">
+                    <a href=""><input type="button" name="" class="am-btn am-btn-default am-btn-success" value="添加"></a>
+                    <a href=""><input type="button" name="" class="am-btn am-btn-default am-btn-success" value="导入"></a>
+                    <button class="am-btn am-btn-default am-btn-success">批量执行</button>
+                    <label><input name="dingding" type="radio" value="email"> </label>
+                    <strong>发送邮件报告</strong>
+                    <label>  <input name="dingding" type="radio" value="dingding" > </label>
+                    <strong>发送钉钉报告</strong>
+                </div>
+                <table class="am-table am-table-striped am-table-hover table-main" style="width: 95%;margin-left: 1px">
+                    <caption><strong>用例</strong></caption>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>项目名称</th>
+                        <th>模块名称</th>
+                        <th>接口地址</th>
+                        <th>请求头</th>
+                        <th>请求方式</th>
+                        <th>参数</th>
+                        <th>预期</th>
+                        <th >操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr >
+                            <td><input type="checkbox"  name="yongli" value="yongli.id"></td>
+                            <td>yongli.projects</td>
+                            <td>yongli.models</td>
+                            <td>yongli.Interface_url</td>
+                            <td style="width: 10%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"> yongli.Interface_headers </td>
+                            <td>yongli.Interface_meth</td>
+                            <td style="width: 10%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">yongli.Interface_pase</td>
+                            <td style="width: 10%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"> yongli.Interface_assert</td>
+                            <td>
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a href=""><input type="button" value="编辑" class="btn btn-primary"></a>
+                                        <a href=""><input type="button" value="删除"class="btn btn-danger"></a>
+                                         <a href="">#}<input type="button" value="调试" class="btn btn-default" id="" ></a>#}
+                                         <input type="button" value="调试" class="btn btn-default"  onclick="testcase(this.id)">
+
+                                          <a href="">#}
+                                          <input type="button" value="调试" class="btn btn-success"   ></a>
+                                          <input type="button" value="调试" class="btn btn-success"   onclick="testcase(this.id)">
+                                          <a href="">#}
+                                          <input type="button" value="调试" class="btn btn-danger"   ></a>#}
+                                          <input type="button" value="调试" class="btn btn-danger"  onclick="testcase(this.id)" >
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+    <div style="display:none;position:fixed;z-index: 210;width: 800px;top: 100px;left: 20%;box-shadow: 0 0 10px rgba(0,0,0,0.6);border: solid 1px #255c71;border-radius: 5px 5px 0 0;background-color: #9eacb4"  id="ceshiyongli">
+    <div style="height: 5px;">请选择测试用例执行的测试环境</div>
+    <div style="background-color: whitesmoke;margin-top: 24px" >
+        <span style="text-align: center">
+            项目：<strong id="ceshiyongprco"></strong>
+        </span>
+        <span>所属测试环境：</span>
+        <select id="xuanzehuanjing">
+        </select>
+    </div>
+    <div style="margin-top: 50%;margin-bottom: auto">
+        <input value="执行" type="button" class="btn-default" id="zhixingceshiyongli" onclick="ceshiyongli()" >
+        <input value="取消" type="button" class=" btn-default"  onclick="guanbi()" >
+    </div>
+ </div>
+        </div>
+    </div>
+{% end%}

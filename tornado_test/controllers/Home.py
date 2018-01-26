@@ -5,6 +5,7 @@ from sqlalchemy.sql import and_,or_
 import json, datetime
 from tornado_test.utils import db
 from tornado_test.models.models import *
+import requests
 
 #基类
 class BaseHandler(tornado.web.RequestHandler):
@@ -72,23 +73,30 @@ class LoginHandler(BaseHandler):
             self.write(json.dumps(dic))
 
 class DropoutHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self, *args, **kwargs):
         self.clear_all_cookies()
         self.redirect('/login')
 
-class LogoutHandler(BaseHandler):
-    def get(self, *args, **kwargs):
-        telno = self.get_secure_cookie('telno')
-        try:
-            self.db.query(UserInfo).filter_by(telno = bytes.decode(telno)).delete()
-            self.db.commit()
-            self.db.close()
-            self.clear_all_cookies()
-            self.redirect('/index')
-        except:
-            self.redirect('/index')
+# class LogoutHandler(BaseHandler):
+#     def get(self, *args, **kwargs):
+#         telno = self.get_secure_cookie('telno')
+#         try:
+#             self.db.query(UserInfo).filter_by(telno = bytes.decode(telno)).delete()
+#             self.db.commit()
+#             self.db.close()
+#             self.clear_all_cookies()
+#             self.redirect('/index')
+#         except:
+#             self.redirect('/index')
 
-class TestHandler(BaseHandler):
+class InterfaceHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, *args, **kwargs):
+        self.render('interface.html',username=self.current_user,inter='')
+
+
+class AddInterfaceHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self, *args, **kwargs):
         self.render('add_interface.html', username=self.current_user)
@@ -121,6 +129,41 @@ class TestHandler(BaseHandler):
             except:
                 dic = {'type': -1}
                 self.write(json.dumps(dic))
+
+class ProjectHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, *args, **kwargs):
+        self.render('project.html',username='linweili')
+
+class ModelHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, *args, **kwargs):
+        self.render('model.html', username='linweili')
+
+class TimingtaskHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, *args, **kwargs):
+        self.render('timingtask.html', username='linweili')
+class InterfaceCaseHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, *args, **kwargs):
+        self.render('interface_yongli.html', username='linweili')
+
+class AdminHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, *args, **kwargs):
+        self.render('useradmin.html', username='linweili')
+
+class TestResultHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, *args, **kwargs):
+        self.render('test_result.html', username='linweili')
+
+class EventsHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self, *args, **kwargs):
+        self.render('events.html', username='linweili')
+
 
 
 
