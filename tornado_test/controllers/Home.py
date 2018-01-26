@@ -11,7 +11,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.db = db.getSession()
     def get_current_user(self):
-        return self.get_secure_cookie('uid')
+        return self.get_secure_cookie('um')
 
 class Check_codeHandler(BaseHandler):
     def get(self, *args, **kwargs):
