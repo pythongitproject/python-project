@@ -1,4 +1,14 @@
 {%extends 'common.html' %}
+{% block header %}
+    <style>
+        pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+        .string { color: green; }
+        .number { color: darkorange; }
+        .boolean { color: blue; }
+        .null { color: magenta; }
+        .key { color: red; }
+    </style>
+{% end %}
 {%block content%}
     <div class="tpl-content-wrapper" style="margin-left: 0.7%">
 
@@ -67,7 +77,7 @@
             <!--返回请求头-->
             <div class="form-group" style="width: 50%">
                 <span>Response Header:</span>
-                <pre id="returnheader" class="am-pre-scrollable ">
+                <pre  class="am-pre-scrollable ">
                     content-language:zh-CN
                     content-type:text/html;charset=UTF-8
                     date:Thu, 25 Jan 2018 07:08:00 GMT
@@ -79,8 +89,8 @@
             <!--返回body-->
             <div class="form-group" style="width: 50%;">
                 <span>Response Body:</span>
-                <pre id="return_json" class="am-pre-scrollable">
-                    {
+                <pre  class="am-pre-scrollable" id="result">
+                        {
                         "error": 0,
                         "status": "success",
                         "date": "2018-01-01"
@@ -93,18 +103,32 @@
 
 </div>
 <script>
+
+
+
+    //新增body参数
     $('#addbody').click(function () {
-        $(this).parent().append('<div class="form-inline" style="margin-top: 10px">\n' +
+        $(this).parent().append('<div class="form-inline "  style="margin-top: 10px">\n' +
             '  <div class="form-group">\n' +
             '    <input type="text" class="form-control" placeholder="key" size="30">\n' +
             '  </div>\n' +
             '\n' +
             '  <div class="form-group" >\n' +
             '  <input type="text" class="form-control"  placeholder="value" size="51">' +
-            '  <input type="button" onclick="rmbody();" class="btn btn-danger rmip" value="移除"/>'+
+            '  <input type="button"  class="btn btn-danger rmip" onclick="rmbody(this);" value="移除"/>'+
             '  </div>\n' + '</div>');
     });
 
+    function rmbody (obj) {
+        $(obj).parent().parent().remove();
+    }
+
+    function rmheader (obj) {
+        $(obj).parent().parent().remove();
+    }
+
+
+    //新增header参数
     $('#addheader').click(function () {
         $(this).parent().append('<div class="form-inline" style="margin-top: 10px">\n' +
             '  <div class="form-group">\n' +
@@ -113,17 +137,41 @@
             '\n' +
             '  <div class="form-group" >\n' +
             '  <input type="text" class="form-control"  placeholder="value" size="51">' +
-            '  <input type="button"  class="btn btn-danger" value="移除"/>'+
+            '  <input type="button"  class="btn btn-danger" onclick="rmheader(this);" value="移除"/>'+
             '  </div>\n' + '</div>');
     });
 
-    function rmbody() {
-        console.log(1);
-        $(this).parent().remove();
-        console.log(2);
+
+    res='{\n' +
+        ' "error": 0,\n' +
+        ' "status": "success",\n' +
+        ' "date": "2018-01-01"\n' +
+        '}'
+
+    $('#result').html(syntaxHighlight(res));
+
+    //高亮显示代码块
+    function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+        json = JSON.stringify(json, undefined, 2);
     }
-
-
+    json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
 
 
 </script>
