@@ -26,13 +26,13 @@
                     <strong>类型/名称: </strong>
                   </div>
                   <div class="form-group">
-                    <select data-am-selected="{btnWidth: '100%',btnSize: 'sm'}">
+                    <select data-am-selected="{btnWidth: '100%',btnSize: 'sm'}" id="select_value">
                          <option value="GET" selected>GET</option>
                          <option value="POST">POST</option>
                     </select>
                   </div>
                   <div class="form-group">
-                     <input type="text" class="form-control"  placeholder="请输入接口名称" size="50" maxlength="90">
+                     <input type="text" class="form-control"  placeholder="请输入接口名称" id="testname" size="50" maxlength="90">
                       <span style="color: red"></span>
                   </div>
             </div>
@@ -40,7 +40,7 @@
             <!--URL地址-->
             <div class="form-group" style="width: 50%">
                   <label >URL地址:</label>
-                  <input type="text" class="form-control"  placeholder="请输入URL地址">
+                  <input type="text" class="form-control" id="testurl"  placeholder="请输入URL地址">
                   <span style="color: red"></span>
             </div>
 
@@ -48,23 +48,47 @@
             <div class="form-group">
                 <label >Body参数名称:</label><br/>
                 <div class="form-inline">
-                     <button type="button" class="btn btn-default" id="addbody">添加Body参数</button>&nbsp;&nbsp;
-                     <button type="button" class="btn btn-success" id="addram">批量添加Raw参数</button>
+                     <button type="button" class="btn btn-default"  id="addbody">批量添加Body参数</button>&nbsp;&nbsp;
+                     <button type="button" class="btn btn-success" id="addraw">添加Raw参数</button>
+                     <input type="hidden" id="raw_count"/>
                      <span style="color: red"></span>
                 </div>
             </div>
 
-            <!--Header名称-->
-            <div class="form-group">
-                    <label >Header名称:</label><br>
-                     <button type="button" class="btn btn-default" id="addheader">添加Header</button>
-                 </div>
+            <!--bodyparams警告窗口-->
+            <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+              <div class="am-modal-dialog">
+                <div class="am-modal-bd">
+                  请移除raw参数再重试！
+                </div>
+                <div class="am-modal-footer">
+                  <span class="am-modal-btn">确定</span>
+                </div>
+              </div>
+            </div>
 
+            <!--bodyraw警告窗口-->
+            <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert-raw">
+              <div class="am-modal-dialog">
+                <div class="am-modal-bd">
+                  请移除body参数再重试！
+                </div>
+                <div class="am-modal-footer">
+                  <span class="am-modal-btn">确定</span>
+                </div>
+              </div>
+            </div>
+
+            <!--Header参数名称-->
+            <div class="form-group">
+                    <label >Header参数名称:</label><br>
+                     <button type="button" class="btn btn-default" id="addheader">添加Header参数</button>
+                 </div>
 
             <!--发送、保存-->
             <div class="form-inline" >
-                <button  type="button" class="btn btn-primary">发送请求</button>&nbsp;&nbsp;
-                <button  type="button" class="btn btn-warning ">保存接口</button>
+                <button  type="button" id="test" class="btn btn-primary">测试接口</button>&nbsp;&nbsp;
+                <button  type="button" id="save" class="btn btn-warning ">保存接口</button>
             </div>
 
             <h5>预期结果：</h5>
@@ -102,78 +126,6 @@
     </div>
 
 </div>
-<script>
-
-
-
-    //新增body参数
-    $('#addbody').click(function () {
-        $(this).parent().append('<div class="form-inline "  style="margin-top: 10px">\n' +
-            '  <div class="form-group">\n' +
-            '    <input type="text" class="form-control" placeholder="key" size="30">\n' +
-            '  </div>\n' +
-            '\n' +
-            '  <div class="form-group" >\n' +
-            '  <input type="text" class="form-control"  placeholder="value" size="51">' +
-            '  <input type="button"  class="btn btn-danger rmip" onclick="rmbody(this);" value="移除"/>'+
-            '  </div>\n' + '</div>');
-    });
-
-    function rmbody (obj) {
-        $(obj).parent().parent().remove();
-    }
-
-    function rmheader (obj) {
-        $(obj).parent().parent().remove();
-    }
-
-
-    //新增header参数
-    $('#addheader').click(function () {
-        $(this).parent().append('<div class="form-inline" style="margin-top: 10px">\n' +
-            '  <div class="form-group">\n' +
-            '    <input type="text" class="form-control" placeholder="key" size="30">\n' +
-            '  </div>\n' +
-            '\n' +
-            '  <div class="form-group" >\n' +
-            '  <input type="text" class="form-control"  placeholder="value" size="51">' +
-            '  <input type="button"  class="btn btn-danger" onclick="rmheader(this);" value="移除"/>'+
-            '  </div>\n' + '</div>');
-    });
-
-
-    res='{\n' +
-        ' "error": 0,\n' +
-        ' "status": "success",\n' +
-        ' "date": "2018-01-01"\n' +
-        '}'
-
-    $('#result').html(syntaxHighlight(res));
-
-    //高亮显示代码块
-    function syntaxHighlight(json) {
-    if (typeof json != 'string') {
-        json = JSON.stringify(json, undefined, 2);
-    }
-    json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
-}
-
-
-</script>
+<script src="{{static_url('interface/add_interface.js')}}"></script>
 {%end%}
 

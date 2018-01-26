@@ -110,6 +110,10 @@ class RequestHandler(BaseHandler):
             dic['status'] = False
             self.write(json.dumps(dic))
 
+class TestHandler(BaseHandler):
+    def get(self, *args, **kwargs):
+        self.write('')
+
 
 
 
