@@ -19,7 +19,8 @@
                     <span class="am-icon-code"></span> 添加接口
                 </div>
             </div>
-
+<form>
+    {% raw xsrf_form_html()%}
             <!--类型、名称-->
             <div class="form-inline" role="form">
                 <div class="form-group">
@@ -33,7 +34,7 @@
                   </div>
                   <div class="form-group">
                      <input type="text" class="form-control"  placeholder="请输入接口名称" id="testname" size="50" maxlength="90">
-                      <span style="color: red"></span>
+                      <span style="color: red" id="tnerror"></span>
                   </div>
             </div>
 
@@ -41,7 +42,7 @@
             <div class="form-group" style="width: 50%">
                   <label >URL地址:</label>
                   <input type="text" class="form-control" id="testurl"  placeholder="请输入URL地址">
-                  <span style="color: red"></span>
+                  <span style="color: red" id="urlerror"></span>
             </div>
 
              <!--Body参数名称-->
@@ -55,30 +56,6 @@
                 </div>
             </div>
 
-            <!--bodyparams警告窗口-->
-            <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
-              <div class="am-modal-dialog">
-                <div class="am-modal-bd">
-                  请移除raw参数再重试！
-                </div>
-                <div class="am-modal-footer">
-                  <span class="am-modal-btn">确定</span>
-                </div>
-              </div>
-            </div>
-
-            <!--bodyraw警告窗口-->
-            <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert-raw">
-              <div class="am-modal-dialog">
-                <div class="am-modal-bd">
-                  请移除body参数再重试！
-                </div>
-                <div class="am-modal-footer">
-                  <span class="am-modal-btn">确定</span>
-                </div>
-              </div>
-            </div>
-
             <!--Header参数名称-->
             <div class="form-group">
                     <label >Header参数名称:</label><br>
@@ -90,18 +67,18 @@
                 <button  type="button" id="test" class="btn btn-primary">测试接口</button>&nbsp;&nbsp;
                 <button  type="button" id="save" class="btn btn-warning ">保存接口</button>
             </div>
-
+</form>
             <h5>预期结果：</h5>
             <!--返回状态码-->
             <div class="form-group" style="margin-top: 10px">
                 <span>Response status:</span><br/>
-                <code style="font-size: large">200</code>
+                <code style="font-size: large" id="recode">200</code>
             </div>
 
             <!--返回请求头-->
             <div class="form-group" style="width: 50%">
                 <span>Response Header:</span>
-                <pre  class="am-pre-scrollable ">
+                <pre  class="am-pre-scrollable " id="reheader">
                     content-language:zh-CN
                     content-type:text/html;charset=UTF-8
                     date:Thu, 25 Jan 2018 07:08:00 GMT
@@ -126,6 +103,41 @@
     </div>
 
 </div>
+
+<!--bodyparams警告窗口-->
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+  <div class="am-modal-dialog">
+    <div class="am-modal-bd">
+      请移除raw参数再重试！
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn">确定</span>
+    </div>
+  </div>
+</div>
+
+<!--bodyraw警告窗口-->
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert-raw">
+  <div class="am-modal-dialog">
+    <div class="am-modal-bd">
+      请移除body参数再重试！
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn">确定</span>
+    </div>
+  </div>
+</div>
+
+<!--test加载窗口-->
+<div class="am-modal am-modal-loading am-modal-no-btn" tabindex="-1" id="my-modal-loading">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">正在请求...</div>
+    <div class="am-modal-bd">
+      <span class="am-icon-spinner am-icon-spin"></span>
+    </div>
+  </div>
+</div>
+
 <script src="{{static_url('interface/add_interface.js')}}"></script>
 {%end%}
 

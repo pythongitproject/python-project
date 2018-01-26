@@ -51,7 +51,6 @@
         $(obj).parent().remove();
     }
 
-
     //新增header参数
     $('#addheader').click(function () {
 
@@ -65,14 +64,6 @@
             '  <input type="button"  class="btn btn-danger" onclick="rmheader(this);" value="移除"/>'+
             '  </div>\n' + '</div>');
     });
-    
-    res='{\n' +
-        ' "error": 0,\n' +
-        ' "status": "success",\n' +
-        ' "date": "2018-01-01"\n' +
-        '}'
-
-    $('#result').html(syntaxHighlight(res));
 
     //高亮显示代码块
     function syntaxHighlight(json) {
@@ -97,20 +88,80 @@
     });
 }
 
-
     $('#test').click(function () {
-        var types = $("#select_value").val();
-        var testname = $("#testname").val();
-        var testurl = $("#testurl").val();
-        var datas = {}
-
-        console.log(types);
-        $.ajax({
-            url:'/test',
-            type:types,
-            data : datas,
-            success:function () {
-                alert('挺好');
+         var testname = $("#testname").val().trim();
+            if (testname!=''){
+                 if(urlComment()){
+                    var types = $("#select_value").val();
+                    var testurl = $("#testurl").val();
+                    $.ajax({
+                        url:'/test',
+                        type:'post',
+                        data : {
+                        'testname':testname,
+                        'testurl':testurl,
+                        'types':types,
+                            "_xsrf":$.cookie('_xsrf')
+                    },
+                        beforeSend:function () {
+                             // 禁用按钮防止重复提交
+                            $("#test").attr("disabled","disabled");
+                            $('#my-modal-loading').modal('open');
+                        },
+                        success:function (data) {
+                            var dd = JSON.parse(data);
+                            $('#result').html(syntaxHighlight(dd.resbody));
+                            $('#reheader').html(syntaxHighlight(dd.head));
+                            $('#recode').html(dd.status_code);
+                            $("#test").removeAttr("disabled");
+                             $('#my-modal-loading').modal('close');
+                        },
+                       });
+                }
+            }else {
+                $('#tnerror').text('接口名称不能为空!');
+                return false;
             }
-        });
+
     });
+
+    $("#testurl").blur(function () {
+        var strs=$("#testurl").val().trim();
+        if(strs!=''){
+             $('#urlerror').text('');
+        }else {
+                $('#urlerror').text('接口名称不能为空!');
+            }
+
+    });
+
+    $("#testname").blur(function () {
+        var strs=$("#testname").val().trim();
+        if(strs!=''){
+             $('#tnerror').text('');
+        }else {
+            $('#tnerror').text('接口名称不能为空!');
+        }
+
+    });
+
+    function urlComment() {
+         //验证url网址
+          var strs=$("#testurl").val().trim();
+          if (strs ==''){
+              $('#urlerror').text('URL地址不能为空!');
+              return false
+          }else {
+              //判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
+              //下面的代码中应用了转义字符"\"输出一个字符"/"
+              var Expression=/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+              var objExp=new RegExp(Expression);
+              if(objExp.test(strs) != true){
+                  $('#urlerror').text('URL格式有误，请重新输入!');
+               return false;
+              } else {
+                  return true;
+                }
+          }
+
+        }

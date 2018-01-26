@@ -92,7 +92,7 @@ class UserAdminHandler(BaseHandler):
     def get(self, *args, **kwargs):
         self.render('add_interface.html',username ='linweili',inte='')
 
-import requests
+
 class RequestHandler(BaseHandler):
     def get(self, *args, **kwargs):
         url = self.get_argument('url',None)
@@ -110,9 +110,21 @@ class RequestHandler(BaseHandler):
             dic['status'] = False
             self.write(json.dumps(dic))
 
+import requests
 class TestHandler(BaseHandler):
-    def get(self, *args, **kwargs):
-        self.write('')
+    def post(self, *args, **kwargs):
+        testurl = self.get_argument('testurl');
+        r = requests.get(testurl)
+        print(testurl)
+        print(r.headers)
+        print(r.json())
+        print(r.status_code)
+        dic = {
+            'status_code':r.status_code,
+           'head':str(r.headers),
+            'resbody':r.json()
+        }
+        self.write(json.dumps(dic))
 
 
 
