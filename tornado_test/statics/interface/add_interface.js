@@ -180,18 +180,22 @@
             }).get().join(", ")*/
             for(var i = 0;i<kk.length;i++){
                 if(i==0){
-                    dic = kk.eq(i).val().trim() +':';
+                    dic ='{'+ '\"'+kk.eq(i).val().trim()+'\"' +':';
                 }else {
                     if(i==1){
-                    dic = dic + kk.eq(i).val().trim() +',';
+                         if(i=kk.length-1){
+                                dic = dic + '\"'+kk.eq(i).val().trim()+'\"'+'}';
+                            }else {
+                                dic = dic + '\"'+kk.eq(i).val().trim()+'\"' +',';
+                            }
                     }else {
                         if(i%2==0){
-                            dic = dic + kk.eq(i).val().trim() +':';
+                            dic = dic + '\"'+kk.eq(i).val().trim()+'\"' +':';
                         }else {
                             if(i=kk.length-1){
-                                dic = dic + kk.eq(i).val().trim();
+                                dic = dic + '\"'+kk.eq(i).val().trim()+'\"'+'}';
                             }else {
-                                dic = dic + kk.eq(i).val().trim() +',';
+                                dic = dic + '\"'+kk.eq(i).val().trim()+'\"' +',';
                             }
 
                         }
@@ -201,5 +205,6 @@
 
             }
                                 console.log(dic);
+        console.log(JSON.parse(dic).dd);
 
     });
