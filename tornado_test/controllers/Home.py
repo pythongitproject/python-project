@@ -52,8 +52,8 @@ class LoginHandler(BaseHandler):
                     import time
                     #expires_day=None, 或者expires_day=3, 即3天, 都不会影响expires的, 因为expires比expires_days 的优先级高些. 所以这里设置为15分钟可以简化为
                     self.clear_cookie('code')
-                    self.set_secure_cookie('um', userinfo.name,expires_days=3,expires = time.time()+900)
-                    self.set_secure_cookie('uid', str(userinfo.id),expires_days=3,expires = time.time()+900)
+                    self.set_secure_cookie('um', userinfo.name,expires_days=3,expires = time.time()+9900)
+                    self.set_secure_cookie('uid', str(userinfo.id),expires_days=3,expires = time.time()+9900)
                     dic['typeid'] = 2
                     self.write(json.dumps(dic))
                 else:
@@ -103,12 +103,16 @@ class AddInterfaceHandler(BaseHandler):
 
     def post(self, *args, **kwargs):
         tt = self.get_argument('types')
+        params = self.get_arguments('params')
+        print(json.dumps(params))
+        testurl = self.get_argument('testurl');
         if tt.upper()=='GET':
             print(1)
             dic = {'type':1}
-            testurl = self.get_argument('testurl');
+
             try:
-                r = requests.get(testurl,timeout = 2)
+                r = requests.get(testurl,params=json.dumps(params))
+                print(r.url)
                 dic['status_code'] = r.status_code
                 dic['head'] = str(r.headers)
                 dic['resbody'] = r.json()

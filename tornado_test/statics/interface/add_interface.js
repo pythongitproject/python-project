@@ -240,7 +240,7 @@
 
             }
         //console.log(dic);
-        return JSON.stringify(dic);
+        //return JSON.stringify(dic);
         return dic;
 
     }
