@@ -56,12 +56,12 @@
 
         $(this).parent().append('<div class="form-inline" style="margin-top: 10px">\n' +
             '  <div class="form-group">\n' +
-            '    <input type="text" class="form-control" placeholder="key" size="35">\n' +
+            '    <input type="text" class="form-control" name="hdparams" placeholder="key" size="35">\n' +
             '  </div>\n' +
             '\n' +
             '  <div class="form-group" >\n' +
             '  <input type="text" class="form-control"  placeholder="value" size="55">' +
-            '  <input type="button"  class="btn btn-danger" onclick="rmheader(this);" value="移除"/>'+
+            '  <input type="button"  class="btn btn-danger" name="hdparams" onclick="rmheader(this);" value="移除"/>'+
             '  </div>\n' + '</div>');
     });
 
@@ -143,7 +143,8 @@
                         'testname':testname,
                         'testurl':testurl,
                         'types':types,
-                            'params':getbodyparams(),
+                        'params':getbodyparams(),
+                        'headers':getheaders(),
                         "_xsrf":$.cookie('_xsrf')
                     },
                         beforeSend:function () {
@@ -239,8 +240,41 @@
 
 
             }
-        //console.log(dic);
-        //return JSON.stringify(dic);
+        return dic;
+
+    }
+
+    function getheaders() {
+            var dic = ''
+            var kk = $("input[name='hdparams']");/*.each(function(){
+              return $(this).val();
+            }).get().join(", ")*/
+            for(var i = 0;i<kk.length;i++){
+                if(i==0){
+                    dic ='{' +'\"'+kk.eq(i).val().trim()+'\"' +':';
+                }else {
+                    if(i==1){
+                        if(i=kk.length-1){
+                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"'+'}';
+                            }else {
+                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +',';
+                            }
+                    }else {
+                        if(i%2==0){
+                            dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +':';
+                        }else {
+                            if(i=kk.length-1){
+                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"'+'}';
+                            }else {
+                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +',';
+                            }
+
+                        }
+                    }
+                }
+
+
+            }
         return dic;
 
     }

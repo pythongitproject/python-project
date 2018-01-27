@@ -104,14 +104,18 @@ class AddInterfaceHandler(BaseHandler):
     def post(self, *args, **kwargs):
         tt = self.get_argument('types')
         params = self.get_arguments('params')
-        print(json.dumps(params))
+        headers = self.get_arguments('headers')
+        if headers:
+            headers = json.dumps(headers)
+        if params:
+            params = json.dumps(params)
+
         testurl = self.get_argument('testurl');
         if tt.upper()=='GET':
             print(1)
             dic = {'type':1}
-
             try:
-                r = requests.get(testurl,params=json.dumps(params))
+                r = requests.get(testurl,params=params,headers=headers)
                 print(r.url)
                 dic['status_code'] = r.status_code
                 dic['head'] = str(r.headers)
