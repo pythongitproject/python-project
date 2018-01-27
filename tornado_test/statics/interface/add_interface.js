@@ -174,8 +174,32 @@
     });
 
     $("#ceshi").click(function () {
-        $("input[name='bgparam']").each(function () {
-            console.log($(this)[0].val());
-            console.log($(this).get(1).val());
-        });
+            var dic = ''
+            var kk = $("input[name='bdparam']");/*.each(function(){
+              return $(this).val();
+            }).get().join(", ")*/
+            for(var i = 0;i<kk.length;i++){
+                if(i==0){
+                    dic = kk.eq(i).val().trim() +':';
+                }else {
+                    if(i==1){
+                    dic = dic + kk.eq(i).val().trim() +',';
+                    }else {
+                        if(i%2==0){
+                            dic = dic + kk.eq(i).val().trim() +':';
+                        }else {
+                            if(i=kk.length-1){
+                                dic = dic + kk.eq(i).val().trim();
+                            }else {
+                                dic = dic + kk.eq(i).val().trim() +',';
+                            }
+
+                        }
+                    }
+                }
+
+
+            }
+                                console.log(dic);
+
     });
