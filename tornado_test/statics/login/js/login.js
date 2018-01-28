@@ -41,45 +41,52 @@
                             $("#terror").text('');
                         }else {
                             $("#cerror").text('');
+                            var rcookie =-1;
+                            if($('#remeber').attr('checked')){
+                                rcookie = 1
+                            }
                              if(flag){
-                            $.post("/login",
-                            {"telno":$("#telno").val().trim(),"password":$("#pwd").val().trim(),
-                                "code":$("#code").val().trim(),"_xsrf":$.cookie('_xsrf')},
-                            function (callback) {
-                               var data = callback;
-                               var ret_dict = JSON.parse(data);
-                               console.log(ret_dict)
-                               if(ret_dict.status){
-                                   window.location.href = "/index";
-                               }else {
-                                   var id = ret_dict.typeid;
-                                   switch (id){
-                                       case -1 :
-                                           $("#telno").val("");
-                                           $("#pwd").val("");
-                                           $("#code").val("");
-                                           Changecode();
-                                           $("#terror").text(ret_dict.msg);
-                                           break;
-                                       case -2 :
-                                            $("#cerror").text(ret_dict.msg);
-                                            $("#code").val("");
-                                            Changecode();
-                                           break;
-                                       case -3 :
-                                           $("#terror").text(ret_dict.msg);
-                                           $("#telno").val("");
-                                           $("#pwd").val("");
-                                           $("#code").val("");
-                                           Changecode();
-                                           break;
-                                       default:
-                                           alert('网络君闹情绪了,请重试！')
-                                           break;
+                                $.post("/login",
+                                {
+                                    "telno":$("#telno").val().trim(),"password":$("#pwd").val().trim(),
+                                    "code":$("#code").val().trim(),"remeber":rcookie,
+                                    "_xsrf":$.cookie('_xsrf')
+                                },
+                                function (callback) {
+                                   var data = callback;
+                                   var ret_dict = JSON.parse(data);
+                                   console.log(ret_dict)
+                                   if(ret_dict.status){
+                                       window.location.href = "/index";
+                                   }else {
+                                       var id = ret_dict.typeid;
+                                           switch (id){
+                                               case -1 :
+                                                   $("#telno").val("");
+                                                   $("#pwd").val("");
+                                                   $("#code").val("");
+                                                   Changecode();
+                                                   $("#terror").text(ret_dict.msg);
+                                                   break;
+                                               case -2 :
+                                                    $("#cerror").text(ret_dict.msg);
+                                                    $("#code").val("");
+                                                    Changecode();
+                                                   break;
+                                               case -3 :
+                                                   $("#terror").text(ret_dict.msg);
+                                                   $("#telno").val("");
+                                                   $("#pwd").val("");
+                                                   $("#code").val("");
+                                                   Changecode();
+                                                   break;
+                                               default:
+                                                   alert('网络君闹情绪了,请重试！')
+                                                   break;
+                                           }
                                    }
-                               }
-                            });
-                        }
+                                });
+                            }
                         }
                     }
                 }

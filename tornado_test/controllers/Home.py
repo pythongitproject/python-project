@@ -6,7 +6,7 @@ import json, datetime
 from tornado_test.utils import db
 from tornado_test.models.models import *
 import requests
-
+import time
 #基类
 class BaseHandler(tornado.web.RequestHandler):
     def initialize(self):
@@ -21,7 +21,7 @@ class Check_codeHandler(BaseHandler):
         #获取验证码
         from tornado_drawer.utils import check_code
         img, code = check_code.create_validate_code()
-        self.set_secure_cookie('code',code)
+        self.set_secure_cookie('code',code,expires = time.time()+120)
         img.save(mstream, "PNG")
         self.write(mstream.getvalue())
 
@@ -49,11 +49,15 @@ class LoginHandler(BaseHandler):
                 self.write(json.dumps(dic))
             if userinfo:
                 if pwd == userinfo.pwd :
-                    import time
-                    #expires_day=None, 或者expires_day=3, 即3天, 都不会影响expires的, 因为expires比expires_days 的优先级高些. 所以这里设置为15分钟可以简化为
+                    #expires_day=None, 或者expires_day=3, 即3天, 都不会影响expires的, 因为expires比expires_days 的优先级高些. 所以这里设置为30分钟可以简化为30*60
                     self.clear_cookie('code')
-                    self.set_secure_cookie('um', userinfo.name,expires_days=3,expires = time.time()+9900)
-                    self.set_secure_cookie('uid', str(userinfo.id),expires_days=3,expires = time.time()+9900)
+                    #self.set_secure_cookie('um', userinfo.name,expires_days=3,expires = time.time()+9900)
+                    if self.get_argument('remeber')==1:
+                        self.set_secure_cookie('um', userinfo.name, expires_days=7)
+                        self.set_secure_cookie('uid', str(userinfo.id), expires_days=7)
+                    else:
+                        self.set_secure_cookie('um', userinfo.name,expires_days=None,expires = time.time()+1800 )
+                        self.set_secure_cookie('uid', str(userinfo.id),expires_days=None, expires = time.time()+1800)
                     dic['typeid'] = 2
                     self.write(json.dumps(dic))
                 else:
@@ -82,7 +86,6 @@ class InterfaceHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self, *args, **kwargs):
         self.render('interface.html',username=self.current_user,inter='')
-
 
 class AddInterfaceHandler(BaseHandler):
     @tornado.web.authenticated
@@ -136,6 +139,7 @@ class TimingtaskHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self, *args, **kwargs):
         self.render('timingtask.html', username='linweili')
+
 class InterfaceCaseHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self, *args, **kwargs):
