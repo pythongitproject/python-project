@@ -217,17 +217,21 @@
                     dic ='{' +'\"'+kk.eq(i).val().trim()+'\"' +':';
                 }else {
                     if(i==1){
-                    dic = dic +'\"'+ kk.eq(i).val().trim() +'\"'+',';
-                    }else {
-                        if(i%2==0){
-                            dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +':';
-                        }else {
-                            if(i=kk.length-1){
+                            //dic = dic +'\"'+ kk.eq(i).val().trim() +'\"'+',';
+                         if(i==kk.length-1){
                                 dic = dic +'\"'+ kk.eq(i).val().trim()+'\"'+'}';
                             }else {
                                 dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +',';
                             }
-
+                    }else {
+                        if(i%2==0){
+                            dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +':';
+                        }else {
+                            if(i==kk.length-1){
+                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"'+'}';
+                            }else {
+                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +',';
+                            }
                         }
                     }
                 }
