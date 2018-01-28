@@ -78,18 +78,6 @@ class DropoutHandler(BaseHandler):
         self.clear_all_cookies()
         self.redirect('/login')
 
-# class LogoutHandler(BaseHandler):
-#     def get(self, *args, **kwargs):
-#         telno = self.get_secure_cookie('telno')
-#         try:
-#             self.db.query(UserInfo).filter_by(telno = bytes.decode(telno)).delete()
-#             self.db.commit()
-#             self.db.close()
-#             self.clear_all_cookies()
-#             self.redirect('/index')
-#         except:
-#             self.redirect('/index')
-
 class InterfaceHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self, *args, **kwargs):
@@ -103,9 +91,10 @@ class AddInterfaceHandler(BaseHandler):
 
     def post(self, *args, **kwargs):
         tt = self.get_argument('types')
-        params = self.get_body_arguments('params')
-        print(params)
-        pp = dict(zip(params[0::2], params[1::2]))
+        params = self.get_arguments('params')
+        #print(params)
+        pp = ''.join(params)
+        #print(pp)
         testurl = self.get_argument('testurl');
         if tt.upper()=='GET':
             dic = {'type':1}

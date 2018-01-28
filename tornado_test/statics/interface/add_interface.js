@@ -21,6 +21,7 @@
     $('#addbody').click(function () {
         var count = $(".addraw");
         if(count.length>0){
+            //alert('请删除raw参数再重试');
             $('#my-alert').modal('open');
         }else {
             $(this).parent().append('<div class="form-inline bodyparam"  style="margin-top: 10px">\n' +
@@ -55,12 +56,12 @@
 
         $(this).parent().append('<div class="form-inline" style="margin-top: 10px">\n' +
             '  <div class="form-group">\n' +
-            '    <input type="text" class="form-control" name="hdparams" placeholder="key" size="35">\n' +
+            '    <input type="text" class="form-control" placeholder="key" size="35">\n' +
             '  </div>\n' +
             '\n' +
             '  <div class="form-group" >\n' +
             '  <input type="text" class="form-control"  placeholder="value" size="55">' +
-            '  <input type="button"  class="btn btn-danger" name="hdparams" onclick="rmheader(this);" value="移除"/>'+
+            '  <input type="button"  class="btn btn-danger" onclick="rmheader(this);" value="移除"/>'+
             '  </div>\n' + '</div>');
     });
 
@@ -128,30 +129,21 @@
 
         }
 
-        function getbodyparams() {
-           var blist = []
-            var kk = $("input[name='bdparam']");
-            for(var i = 0;i<kk.length;i++) {
-                blist.push(kk[i].value);
-            }
-        return blist;
-    }
-
     $('#test').click(function () {
          var testname = $("#testname").val().trim();
-         var params = getbodyparams();
-         console.log(params);
             if (testname!=''){
                  if(urlComment()){
                     var types = $("#select_value").val();
                     var testurl = $("#testurl").val();
+                    var params = getbodyparams();
                     $.ajax({
                         url:'/add_interface',
                         type:'post',
                         data : {
+                        'testname':testname,
                         'testurl':testurl,
                         'types':types,
-                        params:getbodyparams(),
+                        'params':params,
                         "_xsrf":$.cookie('_xsrf')
                     },
                         beforeSend:function () {
@@ -184,27 +176,8 @@
     });
 
     $("#ceshi").click(function () {
-            var dic = []
-            var kk = $("input[name='bdparam']");
-            for(var i = 0;i<kk.length;i++) {
-                dic.push(kk[i].value);
-            }
-
-    });
-
-
-    function getbodyparams() {
-           var blist = []
-            var kk = $("input[name='bdparam']");
-            for(var i = 0;i<kk.length;i++) {
-                blist.push(kk[i].value);
-            }
-        return blist;
-    }
-
-    function getheaders() {
             var dic = ''
-            var kk = $("input[name='hdparams']");/*.each(function(){
+            var kk = $("input[name='bdparam']");/*.each(function(){
               return $(this).val();
             }).get().join(", ")*/
             for(var i = 0;i<kk.length;i++){
@@ -212,11 +185,7 @@
                     dic ='{' +'\"'+kk.eq(i).val().trim()+'\"' +':';
                 }else {
                     if(i==1){
-                        if(i=kk.length-1){
-                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"'+'}';
-                            }else {
-                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +',';
-                            }
+                    dic = dic +'\"'+ kk.eq(i).val().trim() +'\"'+',';
                     }else {
                         if(i%2==0){
                             dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +':';
@@ -233,6 +202,40 @@
 
 
             }
+        console.log(dic);
+        console.log(JSON.parse(dic));
+
+    });
+
+    function getbodyparams(){
+            var dic = ''
+            var kk = $("input[name='bdparam']");/*.each(function(){
+              return $(this).val();
+            }).get().join(", ")*/
+            for(var i = 0;i<kk.length;i++){
+                if(i==0){
+                    dic ='{' +'\"'+kk.eq(i).val().trim()+'\"' +':';
+                }else {
+                    if(i==1){
+                    dic = dic +'\"'+ kk.eq(i).val().trim() +'\"'+',';
+                    }else {
+                        if(i%2==0){
+                            dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +':';
+                        }else {
+                            if(i=kk.length-1){
+                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"'+'}';
+                            }else {
+                                dic = dic +'\"'+ kk.eq(i).val().trim()+'\"' +',';
+                            }
+
+                        }
+                    }
+                }
+
+
+            }
+        console.log(dic);
+        //console.log(JSON.parse(dic));
         return dic;
 
-    }
+    };
