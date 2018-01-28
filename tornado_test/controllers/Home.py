@@ -92,14 +92,15 @@ class AddInterfaceHandler(BaseHandler):
     def post(self, *args, **kwargs):
         tt = self.get_argument('types')
         params = self.get_arguments('params')
-        #print(params)
+        print(params)
         pp = ''.join(params)
-        #print(pp)
+        print(pp)
+        print(json.loads(pp))
         testurl = self.get_argument('testurl');
         if tt.upper()=='GET':
             dic = {'type':1}
             try:
-                r = requests.get(testurl,timeout=9000)
+                r = requests.get(testurl,params= json.loads(pp))
                 dic['status_code'] = r.status_code
                 dic['head'] = str(r.headers)
                 dic['resbody'] = r.json()
@@ -109,9 +110,10 @@ class AddInterfaceHandler(BaseHandler):
                 self.write(json.dumps(dic))
         else:
             dic = {'type': 1}
-            testurl = self.get_argument('testurl');
             try:
-                r = requests.post(testurl, timeout=2)
+                r = requests.post(testurl,data=json.loads(pp))
+                print(r.url)
+                print(r.json())
                 dic['status_code'] = r.status_code
                 dic['head'] = str(r.headers)
                 dic['resbody'] = r.json()
